@@ -10,6 +10,7 @@ class Pins{
     private:
         int LocationX;
         int LocationY;
+        //net?
     public:
         Pins(int X,int Y){
             LocationX=X;
