@@ -11,6 +11,7 @@ class FF{
         int Width;
         int Height;
         int pinCount;
+        string ff_type //ex:ff_1 ,ff_2
         map<string,Pins>PinList;
     public:
         FF(){
