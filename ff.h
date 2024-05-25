@@ -4,14 +4,17 @@
 #include <map>
 #include "pin.h"
 using namespace std;
-
+/*
+FlipFlop 1 FF1 5 10 2
+Pin D 0 8
+Pin Q 5 8*/
 class FF{
     private:
         int bits;
         int Width;
         int Height;
         int pinCount;
-        string ff_type //ex:ff_1 ,ff_2
+       
         map<string,Pins>PinList;
     public:
         FF(){
