@@ -4,6 +4,7 @@ using namespace std;#ifndef _instance_.H
 #include <iostream>
 #include <map>
 #include "pin.h"
+#include "ff.h"
 using namespace std;
 /*
 FlipFlop 1 FF1 5 10 2
