@@ -11,16 +11,15 @@ Pin Q 5 8*/
 class FF{
     private:
         int bits;
-        int Width;
-        int Height;
-        int pinCount;
-       
+        double Width;
+        double Height;
+        int pinCount;      
         map<string,Pins>PinList;
     public:
         FF(){
 
         }
-        void add(int bit,int w,int h,int pC){
+        void add(int bit,float w,float h,int pC){
             bits=bit;
             Width=w;
             Height=h;
