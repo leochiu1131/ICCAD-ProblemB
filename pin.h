@@ -8,11 +8,11 @@ class Pins{
     friend class FF;
     friend class Gate;
     private:
-        int LocationX;
-        int LocationY;
+        double LocationX;
+        double LocationY;
         //net?
     public:
-        Pins(int X,int Y){
+        Pins(float X,float Y){
             LocationX=X;
             LocationY=Y;
         }

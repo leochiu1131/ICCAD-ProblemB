@@ -1,26 +1,20 @@
-#ifndef _FlipFlop_.H
-#define _FlipFlop_.H
+#ifndef _Gate_.H
+#define _Gate_.H
 #include <iostream>
 #include <map>
 #include "pin.h"
 using namespace std;
-/*
-FlipFlop 1 FF1 5 10 2
-Pin D 0 8
-Pin Q 5 8*/
-class FF{
+
+class Gate{
     private:
-        int bits;
         double Width;
         double Height;
-        int pinCount;      
+        int pinCount;
         map<string,Pins>PinList;
     public:
-        FF(){
-
+        Gate(){
         }
-        void add(int bit,float w,float h,int pC){
-            bits=bit;
+        void add(double w,double h,int pC){
             Width=w;
             Height=h;
             pinCount=pC;
