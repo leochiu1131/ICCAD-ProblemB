@@ -13,7 +13,9 @@ class FF{
         int bits;
         double Width;
         double Height;
-        int pinCount;      
+        int pinCount;
+        double QpinDelay;
+        double Power;      
         map<string,Pins>PinList;
     public:
         FF(){
