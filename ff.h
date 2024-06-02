@@ -1,5 +1,5 @@
-#ifndef _FlipFlop_.H
-#define _FlipFlop_.H
+#ifndef _FlipFlop_H
+#define _FlipFlop_H
 #include <iostream>
 #include <map>
 #include "pin.h"
@@ -21,17 +21,38 @@ class FF{
         FF(){
 
         }
-        void add(int bit,float w,float h,int pC){
-            bits=bit;
-            Width=w;
-            Height=h;
-            pinCount=pC;
-            for(int i=0;i<pinCount;i++){
-                string name;
-                int X,Y;
-                Pins temp(X,Y);
-                PinList.insert(pair<string,Pins>(name,temp));
-            }
+        void add_Pin(string s, Pins p){
+            PinList.insert(pair<string, Pins>(s, p));
+        }
+        void SetWidth(double x) {
+            Width = x;
+        }
+        void SetHeight(double x) {
+            Height = x;
+        }
+        void Setbits(int x) {
+            bits = x;
+        }
+        void SetpinCount(int x) {
+            pinCount = x;
+        }
+        void SetQpinDelay(double x) {
+            QpinDelay = x;
+        }
+        void SetPower(double x) {
+            Power = x;
+        }
+        void SetSlack(string s,double x) {
+            PinList[s].SetSlack(x);
+        }
+        int GetpinCount() {
+            return pinCount;
+        }
+        map<string, Pins> GetPinlist() {
+            return PinList;
+        }
+        Pins GetPins(string s) {
+            return PinList[s];
         }
 };
 

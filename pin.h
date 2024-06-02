@@ -1,5 +1,5 @@
-#ifndef _Pins_.H
-#define _Pins_.H
+#ifndef _Pins_H
+#define _Pins_H
 #include <iostream>
 #include <map>
 using namespace std;
@@ -10,11 +10,25 @@ class Pins{
     private:
         double LocationX;
         double LocationY;
+        double slack;
         //net?
     public:
-        Pins(float X,float Y){
-            LocationX=X;
-            LocationY=Y;
+        Pins(){
+        }
+        void SetX(float x) {
+            LocationX = x;
+        }
+        void SetY(float y) {
+            LocationY = y;
+        }
+        void addX(float x) {
+            LocationX += x;
+        }
+        void addY(float y) {
+            LocationY += y;
+        }
+        void SetSlack(double s) {
+            slack = s;
         }
 };
 

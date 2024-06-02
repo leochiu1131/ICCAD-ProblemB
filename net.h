@@ -1,5 +1,5 @@
-#ifndef _Nets_.H
-#define _Nets_.H
+#ifndef _Nets_H
+#define _Nets_H
 #include <iostream>
 #include <map>
 #include "pin.h"
@@ -10,6 +10,7 @@ using namespace std;
 class Nets{
     private:
         map<string,Pins>netlist;
+        map<string, instance>instNet;
     public:
         Nets(){
 
@@ -20,6 +21,9 @@ class Nets{
             //用前面的名字去找出instance，再從後面的名字去找出對應的pin點
 
             //找到之後加到netlist裡面
+        }
+        void Setnet(string s, Pins p) {
+            netlist.insert(pair<string, Pins>(s, p));
         }
 };
 

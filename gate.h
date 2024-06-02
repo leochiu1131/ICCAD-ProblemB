@@ -1,5 +1,5 @@
-#ifndef _Gate_.H
-#define _Gate_.H
+#ifndef _Gate_H
+#define _Gate_H
 #include <iostream>
 #include <map>
 #include "pin.h"
@@ -14,16 +14,29 @@ class Gate{
     public:
         Gate(){
         }
-        void add(double w,double h,int pC){
-            Width=w;
-            Height=h;
-            pinCount=pC;
-            for(int i=0;i<pinCount;i++){
-                string name;
-                int X,Y;
-                Pins temp(X,Y);
-                PinList.insert(pair<string,Pins>(name,temp));
-            }
+        void add_Pin(string s, Pins p) {
+            PinList.insert(pair<string, Pins>(s, p));
+        }
+        void SetWidth(float x) {
+            Width = x;
+        }
+        void SetHeight(float x) {
+            Height = x;
+        }
+        void SetpinCount(int x) {
+            pinCount = x;
+        }
+        void SetSlack(string s, double x) {
+            PinList[s].SetSlack(x);
+        }
+        int GetpinCount() {
+            return pinCount;
+        }
+        map<string, Pins> GetPinlist() {
+            return PinList;
+        }
+        Pins GetPins(string s) {
+            return PinList[s];
         }
 };
 
