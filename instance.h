@@ -53,7 +53,7 @@ class instance{
             else templist = gatetype.GetPinlist();
 
             for (auto& P : templist) {
-                P.second.addX(y);
+                P.second.addY(y);
             }
         }
         void SetFF(FF f) {

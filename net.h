@@ -15,7 +15,35 @@ class Nets{
         Nets(){
 
         }
-        void add(map<string,instance>&inst,string s){ //s代表C1/D or C1/Q
+        void add(map<string,instance>&inst,string s){ 
+            size_t pos = s.find('/');
+
+            if (pos != string::npos) 
+            {
+                string inst_name = s.substr(0, pos);
+                string pin_name = s.substr(pos + 1);
+
+                
+            } 
+            else 
+            {
+                std::cout << "The string does not contain '/'" << std::endl;
+            }
+            instance& ins=inst.find(inst_name);
+            bool type=ins.Gettype();
+            if(type) 
+            {
+                //gate
+                Gate tmp=ins.gatetype;
+                for(auto it=tmp.)
+
+            }
+            else
+            {
+              //ff
+            }
+            
+            //s代表C1/D or C1/Q
             //取出斜線後的pin點，前面是instance的名字，後面是pin的名字
 
             //用前面的名字去找出instance，再從後面的名字去找出對應的pin點
