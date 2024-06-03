@@ -15,6 +15,9 @@ class Nets{
         Nets(){
 
         }
+         void Setnet(string s, Pins p) {
+            netlist.insert(pair<string, Pins>(s, p));
+        }
         void add(map<string,instance>&inst,string s){ 
             size_t pos = s.find('/');
 
@@ -30,19 +33,8 @@ class Nets{
                 std::cout << "The string does not contain '/'" << std::endl;
             }
             instance& ins=inst.find(inst_name);
-            bool type=ins.Gettype();
-            if(type) 
-            {
-                //gate
-                Gate tmp=ins.gatetype;
-                for(auto it=tmp.)
-
-            }
-            else
-            {
-              //ff
-            }
-            
+            Pins& p=  ins.GetPins(pin_name);
+            Setnet(s,p);
             //s代表C1/D or C1/Q
             //取出斜線後的pin點，前面是instance的名字，後面是pin的名字
 
@@ -50,9 +42,7 @@ class Nets{
 
             //找到之後加到netlist裡面
         }
-        void Setnet(string s, Pins p) {
-            netlist.insert(pair<string, Pins>(s, p));
-        }
+       
 };
 
 
