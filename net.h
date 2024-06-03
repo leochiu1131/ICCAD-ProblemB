@@ -30,11 +30,12 @@ class Nets{
             } 
             else 
             {
-                std::cout << "The string does not contain '/'" << std::endl;
+                cout << "The string does not contain '/'" << std::endl;
             }
             instance& ins=inst.find(inst_name);
             Pins& p=  ins.GetPins(pin_name);
             Setnet(s,p);
+            
             //s代表C1/D or C1/Q
             //取出斜線後的pin點，前面是instance的名字，後面是pin的名字
 
