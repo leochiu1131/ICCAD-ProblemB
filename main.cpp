@@ -17,7 +17,7 @@ struct placement {
     int NumofSite;
 };
 int main() {
-    double Alpha, Beta, Gamma, Lambda;
+    double Alpha, Beta,Gamma, Lambda;
 
     double Die_LLeftX, Die_LLeftY, Die_URightX, Die_URightY;
     bool** Die_check;

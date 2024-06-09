@@ -14,6 +14,7 @@ class FF{
         double Width;
         double Height;
         int pinCount;
+        double cost;
         double QpinDelay;
         double Power;      
         map<string,Pins>PinList;
@@ -54,6 +55,20 @@ class FF{
         Pins GetPins(string s) {
             return PinList[s];
         }
+        double Getcost(double beta ,double gamma)
+        {
+            return beta*Width*Height+gamma*Power;
+        }
+         
+        double Getcost(double beta ,double gamma)
+        {
+            return beta*Width*Height+gamma*Power;
+        }
+        double Getcostperpin(double beta ,double gamma)
+        {
+            return beta*Width*Height+gamma*Power/pinCount;
+        }
+
 };
 
 
