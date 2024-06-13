@@ -24,13 +24,13 @@ vector<vector<dieunit>> die(xindex, vector<dieunit>(yindex));
 void topinD(Pins &p)
 {
 
-    die.at(p.getx()-Die_LLeftX).at(p.gety-Die_LLefty).pintype="todpin";
+    die.at(p.getx()-Die_LLeftX).at(p.gety()-Die_LLefty).pintype="todpin";
 
 }
 void topinq(Pins &p)
 {
 
-    die.at(p.getx()-Die_LLeftX).at(p.gety-Die_LLefty).pintype="toqpin";
+    die.at(p.getx()-Die_LLeftX).at(p.gety()-Die_LLefty).pintype="toqpin";
 
 }
 
