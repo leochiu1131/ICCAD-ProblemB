@@ -11,6 +11,7 @@ class Pins{
         double LocationX;
         double LocationY;
         double slack;
+        string type;//d q in out 
         //net?
     public:
         Pins(){
@@ -38,6 +39,10 @@ class Pins{
         {
             return LocationY;
         }
+        void setpintype(string s)
+        {
+                type=s[0];    
+        } 
         
 };
 

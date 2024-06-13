@@ -25,7 +25,6 @@ class Nets{
             {
                 string inst_name = s.substr(0, pos);
                 string pin_name = s.substr(pos + 1);
-
                 
             } 
             else 

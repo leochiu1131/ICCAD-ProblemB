@@ -23,6 +23,7 @@ class FF{
 
         }
         void add_Pin(string s, Pins p){
+            
             PinList.insert(pair<string, Pins>(s, p));
         }
         void SetWidth(double x) {
