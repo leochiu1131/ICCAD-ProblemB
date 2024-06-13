@@ -56,19 +56,11 @@ class FF{
         Pins GetPins(string s) {
             return PinList[s];
         }
-        double Getcost(double beta ,double gamma)
-        {
+        double Getcost(double beta ,double gamma){
             return beta*Width*Height+gamma*Power;
         }
-         
-        double Getcost(double beta ,double gamma)
-        {
-            cost=beta*Width*Height+gamma*Power
-            return beta*Width*Height+gamma*Power;
-        }
-        double Getcostperbit(double beta ,double gamma)
-        {
-            return beta*Width*Height+gamma*Power/bits;
+        double Getcostperpin(double beta ,double gamma){
+            return beta*Width*Height+gamma*Power/pinCount;
         }
 
 };

@@ -98,7 +98,7 @@ int main() {
             FF tempFF;
             int bitnumb;
             infile >> bitnumb;   //bits數量
-            tempFF.Setbits(num);
+            tempFF.Setbits(bitnumb);
 
             string ffname;
             infile >> ffname;//flipflop name
