@@ -25,6 +25,7 @@ void pinD(Pins &p)
 {
 
     die.at(p.getx()-Die_LLeftX).at(p.gety-Die_LLefty).pintype=p.getpintype();
+    
 }
 
 
