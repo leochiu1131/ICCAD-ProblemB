@@ -21,11 +21,17 @@ double xindex=Die_URightX-Die_LLeftX+1;
 double yindex=Die_URighty-Die_LLefty+1;
 vector<vector<dieunit>> die(xindex, vector<dieunit>(yindex));
 
-void pinD(Pins &p)
+void topinD(Pins &p)
 {
 
-    die.at(p.getx()-Die_LLeftX).at(p.gety-Die_LLefty).pintype=p.getpintype();
-    
+    die.at(p.getx()-Die_LLeftX).at(p.gety-Die_LLefty).pintype="todpin";
+
+}
+void topinq(Pins &p)
+{
+
+    die.at(p.getx()-Die_LLeftX).at(p.gety-Die_LLefty).pintype="toqpin";
+
 }
 
 
