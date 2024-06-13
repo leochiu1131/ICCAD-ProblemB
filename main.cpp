@@ -23,7 +23,7 @@ int main() {
 
     map<string, Pins>Input_pins;
     map<string, Pins>Output_pins;
-
+    
     map<string, FF>FF_lib;
     map<string, Gate>GG_lib;
 

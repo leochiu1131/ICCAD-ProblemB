@@ -66,9 +66,9 @@ class FF{
             cost=beta*Width*Height+gamma*Power
             return beta*Width*Height+gamma*Power;
         }
-        double Getcostperpin(double beta ,double gamma)
+        double Getcostperbit(double beta ,double gamma)
         {
-            return beta*Width*Height+gamma*Power/pinCount;
+            return beta*Width*Height+gamma*Power/bits;
         }
 
 };
