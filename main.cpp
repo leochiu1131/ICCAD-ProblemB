@@ -119,6 +119,7 @@ int main() {
                 tempPin.SetX(num);
                 infile >> num;//Pin y
                 tempPin.SetY(num);
+                tempPin.setpintype(s);
                 tempFF.add_Pin(s, tempPin);
             }
             FF_lib.insert(pair<string, FF>(ffname, tempFF));

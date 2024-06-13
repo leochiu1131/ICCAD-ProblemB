@@ -43,7 +43,10 @@ class Pins{
         {
                 type=s[0];    
         } 
-        
+        string getpintype()
+        {
+            return type;
+        }
 };
 
 
