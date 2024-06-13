@@ -63,6 +63,7 @@ class FF{
          
         double Getcost(double beta ,double gamma)
         {
+            cost=beta*Width*Height+gamma*Power
             return beta*Width*Height+gamma*Power;
         }
         double Getcostperpin(double beta ,double gamma)
