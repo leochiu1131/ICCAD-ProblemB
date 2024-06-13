@@ -23,8 +23,9 @@ int main() {
 
     map<string, Pins>Input_pins;
     map<string, Pins>Output_pins;
-    
+
     map<string, FF>FF_lib;
+    map<int,map<string, FF>>FF_lib2;
     map<string, Gate>GG_lib;
 
     map<string, instance>inst_lib;
@@ -95,7 +96,8 @@ int main() {
     while (s == "FlipFlop" || s=="Gate") {
         if (s == "FlipFlop") {
             FF tempFF;
-            infile >> num;   //bits數量
+            int bitnumb;
+            infile >> bitnumb;   //bits數量
             tempFF.Setbits(num);
 
             string ffname;
@@ -120,6 +122,19 @@ int main() {
                 tempFF.add_Pin(s, tempPin);
             }
             FF_lib.insert(pair<string, FF>(ffname, tempFF));
+            auto bitnums=FF_lib2.find(bitnumb);
+            if(bitnums!=FF_lib2.end())
+            {
+                bitnums->second.insert(pair<string, FF>(ffname, tempFF));
+            }
+            else
+            {
+                map<string, FF> tmpmap;
+                tmpmap.insert(pair<string, FF>(ffname, tempFF));
+                FF_lib2.insert(pair<int,map<string,FF>>(bitnumb,tmpmap));
+
+            }
+           
         }
         else {
             Gate tempGate;
