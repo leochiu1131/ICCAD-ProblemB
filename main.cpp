@@ -20,7 +20,6 @@ int main() {
     double Alpha, Beta,Gamma, Lambda;
 
     double Die_LLeftX, Die_LLeftY, Die_URightX, Die_URightY;
-    bool** Die_check;
 
     map<string, Pins>Input_pins;
     map<string, Pins>Output_pins;
@@ -34,6 +33,7 @@ int main() {
     double BinWidth, BinHeight, BinMaxUtil;
 
     vector<placement> placementRow;
+    bool** placement_check;
     double DisplacementDelay;
     map<string, double>TimingSlack;
 
@@ -229,7 +229,11 @@ int main() {
         placementRow.push_back(temp);
         infile >> s;
     }
-
+    placement_check = new bool* [placementRow.size()];
+    for (int i = 0; i < placementRow.size(); i++) {
+        placement_check[i] = new bool[placementRow[i].NumofSite];
+    }
+    
     //"Now" s is DisplacementDelay
     infile >> DisplacementDelay;
     infile >> s; //QpinDelay
