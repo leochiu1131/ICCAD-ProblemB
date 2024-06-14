@@ -1,5 +1,6 @@
 #include <iostream>
 #include <map>
+#include <unordered_map>
 #include <vector>
 #include <string>
 #include <fstream>
@@ -17,7 +18,7 @@ struct placement {
     int NumofSite;
 };
 int main() {
-    double Alpha, Beta,Gamma, Lambda;
+    double Alpha, Beta, Gamma, Lambda;
 
     double Die_LLeftX, Die_LLeftY, Die_URightX, Die_URightY;
 
@@ -25,10 +26,10 @@ int main() {
     map<string, Pins>Output_pins;
 
     map<string, FF>FF_lib;
-    map<int,map<string, FF>>FF_lib2;
+    map<int, map<string, FF>>FF_lib2;
     map<string, Gate>GG_lib;
 
-    map<string, instance>inst_lib;
+    unordered_map<string, instance>inst_lib;
     map<string, Nets>Net_lib;
 
     double BinWidth, BinHeight, BinMaxUtil;
@@ -43,10 +44,12 @@ int main() {
 
     string s;
     double num;
-    infile.open("sample.txt");
+    infile.open("testcase1.txt");
+    //sample.txt
+    //testcase1.txt
 
     infile >> s; //Alpha
-    infile >> Alpha; 
+    infile >> Alpha;
     infile >> s; //Beta
     infile >> Beta;
     infile >> s; //Gamma
@@ -76,7 +79,6 @@ int main() {
     }
 
     infile >> s; //Number of Output
-
     infile >> num;
     for (int i = 0; i < num; i++) {
         int coodinate;
@@ -92,13 +94,12 @@ int main() {
     }
 
     infile >> s; //flip_flop
-
-    while (s == "FlipFlop" || s=="Gate") {
+    
+    while (s == "FlipFlop" || s == "Gate") {
         if (s == "FlipFlop") {
             FF tempFF;
-            int bitnumb;
-            infile >> bitnumb;   //bits數量
-            tempFF.Setbits(bitnumb);
+            infile >> num;   //bits數量
+            tempFF.Setbits(num);
 
             string ffname;
             infile >> ffname;//flipflop name
@@ -119,12 +120,11 @@ int main() {
                 tempPin.SetX(num);
                 infile >> num;//Pin y
                 tempPin.SetY(num);
-                tempPin.setpintype(s);
                 tempFF.add_Pin(s, tempPin);
             }
             FF_lib.insert(pair<string, FF>(ffname, tempFF));
-            auto bitnums=FF_lib2.find(bitnumb);
-            if(bitnums!=FF_lib2.end())
+            auto bitnums = FF_lib2.find(tempFF.Getpin());
+            if (bitnums != FF_lib2.end())
             {
                 bitnums->second.insert(pair<string, FF>(ffname, tempFF));
             }
@@ -132,15 +132,15 @@ int main() {
             {
                 map<string, FF> tmpmap;
                 tmpmap.insert(pair<string, FF>(ffname, tempFF));
-                FF_lib2.insert(pair<int,map<string,FF>>(bitnumb,tmpmap));
+                FF_lib2.insert(pair<int, map<string, FF>>(tempFF.Getpin(), tmpmap));
 
             }
-           
+
         }
         else {
             Gate tempGate;
             string gatename;
-            cin >> gatename; //Gate name
+            infile >> gatename; //Gate name
 
             infile >> num;   //flipflop Width
             tempGate.SetWidth(num);
@@ -163,17 +163,22 @@ int main() {
         }
         infile >> s;
     }
-    
+
+    cout << "inst" << endl;
     //s:NumInstance
     int instanceCount;
     infile >> instanceCount; //instanceCount
     for (int i = 0; i < instanceCount; i++) {
+        if (i % 10000 == 0)cout << i << endl;
+        //cout << i << endl;
         instance tempinst;
         infile >> s; //Inst
         string instName;
         infile >> instName; //instName
-        infile >> s; //libCellname
-        tempinst.Setname(s,inst_lib,FF_lib,GG_lib);
+        infile >> s;        //libCellname
+        auto it = FF_lib.find(s);
+        bool type = (it==FF_lib.end());  //type=1:代表沒找到->Gate
+        tempinst.Setname(s,type);
         if (!tempinst.Gettype()) { //代表是flip flop
             tempinst.SetFF(FF_lib[s]);
         }
@@ -188,6 +193,10 @@ int main() {
         inst_lib.insert(pair<string, instance>(instName, tempinst));
     }
 
+    cout << "net" << endl;
+    vector<vector<instance>>FF_same_CLK;     //找出有相同clk signal的FF
+    bool CLK_ok;
+
     infile >> s; //NumNets
     int netCount;
     infile >> netCount;
@@ -196,6 +205,11 @@ int main() {
     int len;
     char slash[2];
     for (int i = 0; i < netCount; i++) {
+        if (i % 10000 == 0)cout << i << endl;
+        //For record
+        CLK_ok = 0;
+        vector<instance>FF_same_CLK_temp;
+
         infile >> s; //Net
         string netname;
         int numPins;
@@ -206,13 +220,16 @@ int main() {
             infile >> s; //Pin
             infile >> s;
             F = s.c_str();
-            len=sscanf_s(F, "%[^/]%c%s", part1,100, slash,5, part2,100);
+            len = sscanf_s(F, "%[^/]%c%s", part1, 100, slash, 5, part2, 100);
             if (len == 3) {
                 instance tempinst;
                 Pins temppin;
                 tempinst = inst_lib[part1];
                 temppin = tempinst.GetPins(part2);
                 tempnet.Setnet(s, temppin);
+                if (!strcmp(part2, "CLK")) {
+                    CLK_ok = 1;
+                }
             }
             else {
                 auto it = Input_pins.find(s);
@@ -223,7 +240,12 @@ int main() {
                     tempnet.Setnet(s, Output_pins[s]);
                 }
             }
-            //cout << part1 << "," <<len<<"," << part2 << endl;
+            if (CLK_ok) {
+                FF_same_CLK_temp.push_back(inst_lib[part1]);
+            }
+        }
+        if (CLK_ok) {
+            FF_same_CLK.push_back(FF_same_CLK_temp);
         }
     }
 
@@ -245,11 +267,26 @@ int main() {
         placementRow.push_back(temp);
         infile >> s;
     }
-    placement_check = new bool* [placementRow.size()];
-    for (int i = 0; i < placementRow.size(); i++) {
-        placement_check[i] = new bool[placementRow[i].NumofSite];
+    //初始定義
+    placement_check = new bool* [placementRow[0].NumofSite];
+    for (int i = 0; i < placementRow[0].NumofSite; i++) {
+        placement_check[i] = new bool[placementRow.size()];
     }
-    
+    //初始化
+    for (int i = 0; i < placementRow[0].NumofSite; i++) {
+        for (int j = 0; j < placementRow.size(); j++) {
+            placement_check[i][j] = 0;
+        }
+    }
+    cout << "placement_check" << endl;
+    for (auto& it : inst_lib) {
+        int temp_x = it.second.GetX();
+        int temp_y = it.second.GetY();
+        temp_x = (temp_x - placementRow[0].startX) / placementRow[0].siteWidth;
+        temp_y=(temp_y-placementRow[0].startY)/ placementRow[0].siteHeight;
+        placement_check[temp_x][temp_y] = 1;
+    }
+
     //"Now" s is DisplacementDelay
     infile >> DisplacementDelay;
     infile >> s; //QpinDelay
@@ -271,13 +308,21 @@ int main() {
 
     //"Now" s is GatePower
     while (s == "GatePower") {
-        cout << "hi" << endl;
         infile >> s;
         infile >> num;
         FF_lib[s].SetPower(num);
         infile >> s;
     }
 
+    cout << FF_same_CLK.size()<<endl;
+    int sum = 0;
+    for (int i = 0; i < placementRow[0].NumofSite; i++) {
+        for (int j = 0; j < placementRow.size(); j++) {
+            if (placement_check[i][j] == 1)sum++;
+        }
+        cout << sum << endl;
+        sum = 0;
+    }
 
     infile.close();
     outfile.close();
