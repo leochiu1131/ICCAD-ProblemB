@@ -164,12 +164,10 @@ int main() {
         infile >> s;
     }
 
-    cout << "inst" << endl;
     //s:NumInstance
     int instanceCount;
     infile >> instanceCount; //instanceCount
     for (int i = 0; i < instanceCount; i++) {
-        if (i % 10000 == 0)cout << i << endl;
         //cout << i << endl;
         instance tempinst;
         infile >> s; //Inst
@@ -193,7 +191,6 @@ int main() {
         inst_lib.insert(pair<string, instance>(instName, tempinst));
     }
 
-    cout << "net" << endl;
     vector<vector<instance>>FF_same_CLK;     //找出有相同clk signal的FF
     bool CLK_ok;
 
@@ -205,7 +202,6 @@ int main() {
     int len;
     char slash[2];
     for (int i = 0; i < netCount; i++) {
-        if (i % 10000 == 0)cout << i << endl;
         //For record
         CLK_ok = 0;
         vector<instance>FF_same_CLK_temp;

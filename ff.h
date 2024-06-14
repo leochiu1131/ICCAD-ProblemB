@@ -50,6 +50,9 @@ class FF{
         int GetpinCount() {
             return pinCount;
         }
+        int Getpin() {
+            return bits;
+        }
         map<string, Pins> GetPinlist() {
             return PinList;
         }
