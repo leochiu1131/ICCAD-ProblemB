@@ -18,13 +18,27 @@ class FF{
         double QpinDelay;
         double Power;      
         map<string,Pins>PinList;
+        map<string,pair<Pins,Pins>> Pinpair;//D0,Q0
     public:
         FF(){
 
         }
+
         void add_Pin(string s, Pins p){
             
             PinList.insert(pair<string, Pins>(s, p));
+        }
+        void make_pinpair()
+        {
+            for(int i=0;i<bits;i++)
+            {
+                string Pinindex=to_string(i);
+                auto nowd=PinList.find("D"+Pinindex);
+                auto nowq=PinList.find("Q"+Pinindex);
+                pair<Pins,Pins> tmpp=(nowd->second,nowq->second);
+                Pinpair.insert(pair<string, pair<Pins,Pins>>(Pinindex,tmpp));
+
+            }
         }
         void SetWidth(double x) {
             Width = x;

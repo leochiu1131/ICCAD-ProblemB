@@ -15,6 +15,7 @@ class instance{
         Gate gatetype;
         bool type; //0:FF,1:Gate
         string libname;
+        
     public:
         instance(){
 
