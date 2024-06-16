@@ -24,13 +24,8 @@ void find_the_position(vector<instance>front, vector<instance>end, map<string, F
 void Merge(vector<instance>FF_same_CLK, bool** placement_check, vector<placement>placementRow, map<string, FF>FF_lib,
     map<int, map<string, FF>>FF_lib2) {
     //找出需要合併的FF，先將其FF存在front，並給予合併之後的FF_Lib，傳到find_the_position
-    vector<instance>front, end;
-    for (int i = 0; i < FF_same_CLK.size(); i++) {
-        front.push_back(FF_same_CLK[i]);
-    }
-
-
-    find_the_position(front, end, FF_lib,placement_check,placementRow);
+    vector<vector<instance>>New_FF,Old_FF;
+    
 }
 
 int main() {
