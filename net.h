@@ -10,6 +10,11 @@ using namespace std;
 class Nets{
     private:
         map<string,Pins>netlist;
+        map<string,Pins> Dnetlist;
+        map<string,Pins> Qnetlist;
+        map<string,Pins> INnetlist;
+        map<string,Pins> OUTnetlist;
+        map<string,Pins> CLKnetlist;
         map<string, instance>instNet;
     public:
         Nets(){
@@ -18,6 +23,22 @@ class Nets{
          void Setnet(string s, Pins p) {
             netlist.insert(pair<string, Pins>(s, p));
         }
+         void SetDnet(string s, Pins p) {
+            Dnetlist.insert(pair<string, Pins>(s, p));
+        }
+         void SetQnet(string s, Pins p) {
+            Qnetlist.insert(pair<string, Pins>(s, p));
+        }
+         void SetINnet(string s, Pins p) {
+            INnetlist.insert(pair<string, Pins>(s, p));
+        }
+        void SetOUTnet(string s, Pins p) {
+            OUTnetlist.insert(pair<string, Pins>(s, p));
+        }
+        void SetCLKnet(string s, Pins p) {
+            CLKnetlist.insert(pair<string, Pins>(s, p));
+        }
+
         void add(map<string,instance>&inst,string s){ 
             size_t pos = s.find('/');
 
@@ -33,11 +54,39 @@ class Nets{
             }
             instance& ins=inst.find(inst_name);
             Pins& p=  ins.GetPins(pin_name);
-            Setnet(s,p);
-            if(pinname[0]=='D')
+            bool added=0;
+            if(pin_name[0]=='D')
             {
-                
+                SetDnet(s,p);
+                added=1;
             }
+            if(pin_name[0]=='Q')
+            {
+                SetQnet(s,p);
+                added=1;
+            }
+            if(pin_name[0]=='I')
+            {
+                SetINnet(s,p);
+                added=1;
+            }
+            if(pin_name[0]=='O')
+            {
+                SetOUTnet(s,p);
+                added=1;
+            }
+            if(pin_name[0]=='C'||pin_name[0]=='c')
+            {
+                SetCLKnet(s,p);
+                added=1;
+            }
+            if(!added)
+            {
+
+                cout<<inst_name<<pin_name<<"bug"<<endl;
+            }
+
+
             
             //s代表C1/D or C1/Q
             //取出斜線後的pin點，前面是instance的名字，後面是pin的名字

@@ -320,7 +320,7 @@ int main() {
         sum = 0;
     }
     
-    for(auto it=inst_lib.begin();it!=)
+   
     infile.close();
     outfile.close();
     return 0;
