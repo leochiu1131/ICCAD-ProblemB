@@ -17,6 +17,22 @@ struct placement {
     double siteHeight;
     int NumofSite;
 };
+void find_the_position(vector<instance>front, vector<instance>end, map<string, FF>FF_lib,bool**placement_check,
+    vector<placement>placementRow) {
+    //從給予的FF_Lib資訊以及front，找出一個最佳且可以放置的位置，放到end
+}
+void Merge(vector<instance>FF_same_CLK, bool** placement_check, vector<placement>placementRow, map<string, FF>FF_lib,
+    map<int, map<string, FF>>FF_lib2) {
+    //找出需要合併的FF，先將其FF存在front，並給予合併之後的FF_Lib，傳到find_the_position
+    vector<instance>front, end;
+    for (int i = 0; i < FF_same_CLK.size(); i++) {
+        front.push_back(FF_same_CLK[i]);
+    }
+
+
+    find_the_position(front, end, FF_lib,placement_check,placementRow);
+}
+
 int main() {
     double Alpha, Beta, Gamma, Lambda;
 
@@ -30,7 +46,7 @@ int main() {
     map<string, Gate>GG_lib;
 
     unordered_map<string, instance>inst_lib;
-    map<string, Nets>Net_lib;
+    map<string, Nets>Net_Lib;
 
     double BinWidth, BinHeight, BinMaxUtil;
 
@@ -164,10 +180,12 @@ int main() {
         infile >> s;
     }
 
+    cout << "inst" << endl;
     //s:NumInstance
     int instanceCount;
     infile >> instanceCount; //instanceCount
     for (int i = 0; i < instanceCount; i++) {
+        if (i % 10000 == 0)cout << i << endl;
         //cout << i << endl;
         instance tempinst;
         infile >> s; //Inst
@@ -191,21 +209,18 @@ int main() {
         inst_lib.insert(pair<string, instance>(instName, tempinst));
     }
 
-    vector<vector<instance>>FF_same_CLK;     //找出有相同clk signal的FF
+    cout << "net" << endl;
+    vector<vector<string>>FF_same_CLK;     //找出有相同clk signal的FF
     bool CLK_ok;
 
     infile >> s; //NumNets
     int netCount;
     infile >> netCount;
-    const char* F;
-    char part1[100], part2[100];
-    int len;
-    char slash[2];
+    vector<string>FF_same_CLK_temp;
     for (int i = 0; i < netCount; i++) {
+        if (i % 10000 == 0)cout << i << endl;
         //For record
         CLK_ok = 0;
-        vector<instance>FF_same_CLK_temp;
-
         infile >> s; //Net
         string netname;
         int numPins;
@@ -215,14 +230,24 @@ int main() {
         for (int i = 0; i < numPins; i++) {
             infile >> s; //Pin
             infile >> s;
-            F = s.c_str();
+            size_t pos = s.find('/');
+            string inst_name;
+            string pin_name;
+            if (pos != string::npos) {
+                inst_name = s.substr(0, pos);
+                pin_name = s.substr(pos + 1);
+            }
+            tempnet.add(inst_lib, s,inst_name,pin_name,pos,Input_pins,Output_pins);
+            /*F = s.c_str();
             len = sscanf_s(F, "%[^/]%c%s", part1, 100, slash, 5, part2, 100);
             if (len == 3) {
                 instance tempinst;
                 Pins temppin;
                 tempinst = inst_lib[part1];
                 temppin = tempinst.GetPins(part2);
-                tempnet.Setnet(s, temppin);
+                if (part2[0] == "D")tempnet.SetDnet(s, temppin);
+                else if (part2 == "Q")tempnet.SetQnet(s, temppin);
+                else tempnet.SetCLKnet(s, temppin);
                 if (!strcmp(part2, "CLK")) {
                     CLK_ok = 1;
                 }
@@ -235,13 +260,22 @@ int main() {
                 else {
                     tempnet.Setnet(s, Output_pins[s]);
                 }
-            }
-            if (CLK_ok) {
-                FF_same_CLK_temp.push_back(inst_lib[part1]);
+            }*/
+            if (pin_name=="CLK" && s != "CLK") {
+                CLK_ok = 1;
+                FF_same_CLK_temp.push_back(inst_name);
             }
         }
+        /*if (tempnet.GetCLkSize() != 0) {
+            auto it = tempnet.CLKnetlist.begin();
+            while (it != tempnet.CLKnetlist.end()) {
+                FF_same_CLK_temp.push_back(inst_lib[it->first]);
+            }
+        }*/
+        Net_Lib.insert(pair<string, Nets>(netname, tempnet));
         if (CLK_ok) {
             FF_same_CLK.push_back(FF_same_CLK_temp);
+            FF_same_CLK_temp.clear();
         }
     }
 
@@ -311,16 +345,14 @@ int main() {
     }
 
     cout << FF_same_CLK.size()<<endl;
-    int sum = 0;
-    for (int i = 0; i < placementRow[0].NumofSite; i++) {
-        for (int j = 0; j < placementRow.size(); j++) {
-            if (placement_check[i][j] == 1)sum++;
-        }
-        cout << sum << endl;
-        sum = 0;
+    for (int i = 0; i < FF_same_CLK.size(); i++) {
+        cout << FF_same_CLK[i].size()<<endl;
     }
+
     
-   
+
+
+
     infile.close();
     outfile.close();
     return 0;
