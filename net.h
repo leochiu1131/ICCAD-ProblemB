@@ -131,7 +131,7 @@ class Nets{
                 {   
                     
                     inst.toqpin.insert(pair<string,Pins>(pin_name,qit->second));
-                    cout<<"outt";
+                    //cout<<"outt";
                 }
 
             }

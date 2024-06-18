@@ -41,9 +41,9 @@ class instance{
                 map<string, Pins>& templist = fftype.GetPinlist();
                 for (auto P = templist.begin();P!=templist.end();P++) {
                 
-                cout << P->second.getx()<<"to";
+                //cout << P->second.getx()<<"to";
                 P->second.addX(x);
-                cout << P->second.getx()<<endl;
+               // cout << P->second.getx()<<endl;
                 }
 
             }
@@ -52,9 +52,9 @@ class instance{
                 map<string, Pins>& templist = gatetype.GetPinlist();
                 for (auto P = templist.begin();P!=templist.end();P++) {
                 
-                cout << P->second.getx()<<"to";
+               // cout << P->second.getx()<<"to";
                 P->second.addY(x);
-                cout << P->second.getx()<<endl;
+               // cout << P->second.getx()<<endl;
                 }
 
             }
@@ -71,9 +71,9 @@ class instance{
                 map<string, Pins>& templist = fftype.GetPinlist();
                 for (auto P = templist.begin();P!=templist.end();P++) {
                 
-                cout << P->second.gety()<<"to";
+               // cout << P->second.gety()<<"to";
                 P->second.addY(y);
-                cout << P->second.gety()<<endl;
+                //cout << P->second.gety()<<endl;
                 }
 
             }
@@ -82,9 +82,9 @@ class instance{
                 map<string, Pins>& templist = gatetype.GetPinlist();
                 for (auto P = templist.begin();P!=templist.end();P++) {
                 
-                cout << P->second.gety()<<"to";
+                //cout << P->second.gety()<<"to";
                 P->second.addY(y);
-                cout << P->second.gety()<<endl;
+               // cout << P->second.gety()<<endl;
                 }
 
             }

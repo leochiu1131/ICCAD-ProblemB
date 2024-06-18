@@ -56,7 +56,7 @@ int main() {
     string s;
     double num;
     cout<<"start";
-    infile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\sampleCase");
+    infile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\testcase1_0614.txt");
     //sample.txt
     //testcase1.txt
     if(infile.is_open())
@@ -328,7 +328,7 @@ int main() {
         int temp_y = it.second.GetY();
         temp_x = (temp_x - placementRow[0].startX) / placementRow[0].siteWidth;
         temp_y=(temp_y-placementRow[0].startY)/ placementRow[0].siteHeight;
-        placement_check[temp_x][temp_y] = 1;
+        //placement_check[temp_x][temp_y] = 1;SEGMENTAION FAULT
     }
 
     //"Now" s is DisplacementDelay
@@ -359,7 +359,8 @@ int main() {
     }
 
     cout << FF_same_CLK.size()<<endl;
-    for (int i = 0; i < FF_same_CLK.size(); i++) {
+    for (int i = 0; i < FF_same_CLK.size(); i++)
+    {
         cout <<"ffclk" <<i<<" " <<FF_same_CLK[i].size()<<endl;
         map<string,pair<Pins,Pins>> topin;
         for(int j=0;j<FF_same_CLK[i].size();j++)
@@ -394,6 +395,7 @@ int main() {
         for(auto it=topin.begin();it!=topin.end();it++)
         {
             cout<<"to"<<it->first<<" "<<it->second.first.getx()<<","<<it->second.first.gety()<<"-"<<it->second.second.getx()<<","<<it->second.second.gety()<<endl;
+            //COMBINATIAL GATE 顯示不出待查
         }
        
 
