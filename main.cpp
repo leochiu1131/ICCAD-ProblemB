@@ -125,6 +125,7 @@ int main() {
 
             string ffname;
             infile >> ffname;//flipflop name
+            cout<<ffname<<endl;
 
             infile >> num;   //flipflop Width
             tempFF.SetWidth(num);
@@ -193,7 +194,7 @@ int main() {
     int instanceCount;
    
     infile >> instanceCount; //instanceCount
-     cout<<instanceCount;
+     cout<<instanceCount<<endl;
     for (int i = 0; i < instanceCount; i++) {
         if (i % 10000 == 0)cout << i << endl;
         //cout << i << endl;
@@ -217,8 +218,9 @@ int main() {
         tempinst.SetY(num);
 
         inst_lib.insert(pair<string, instance>(instName, tempinst));
+        
     }
-
+    cout<<inst_lib["reg1"].GetPins("D").gety()<<"ss"<<endl;
     cout << "nett" << endl;
     vector<vector<string>>FF_same_CLK;     //找出有相同clk signal的FF
     bool CLK_ok;
@@ -358,7 +360,44 @@ int main() {
 
     cout << FF_same_CLK.size()<<endl;
     for (int i = 0; i < FF_same_CLK.size(); i++) {
-        cout << FF_same_CLK[i].size()<<endl;
+        cout <<"ffclk" <<i<<" " <<FF_same_CLK[i].size()<<endl;
+        map<string,pair<Pins,Pins>> topin;
+        for(int j=0;j<FF_same_CLK[i].size();j++)
+        {
+            
+            string nowinstname=FF_same_CLK.at(i).at(j);
+            instance nowinst=inst_lib[nowinstname];
+            cout<<nowinstname<<endl;
+            FF nowff=FF_lib[nowinst.Getlibname()];
+            if(nowff.getbit()>1)
+            {
+                 for(int k=0;k<nowff.getbit();k++)
+                {    
+                    Pins temptoD =nowinst.todpin["D"+to_string(k)];
+                    Pins temptoQ =nowinst.toqpin["Q"+to_string(k)];
+                    pair<Pins,Pins> temppair(temptoD,temptoQ);
+                    topin.insert(pair<string,pair<Pins,Pins>>(nowinstname+to_string(k),temppair));
+                }
+               
+            }
+             else
+                {
+                    Pins temptoD =nowinst.todpin["D"];
+                    Pins temptoQ =nowinst.toqpin["Q"];
+                    pair<Pins,Pins> temppair(temptoD,temptoQ);
+                    topin.insert(pair<string,pair<Pins,Pins>>(nowinstname,temppair));
+                }
+        
+        
+            
+        }
+        for(auto it=topin.begin();it!=topin.end();it++)
+        {
+            cout<<"to"<<it->first<<" "<<it->second.first.getx()<<","<<it->second.first.gety()<<"-"<<it->second.second.getx()<<","<<it->second.second.gety()<<endl;
+        }
+       
+
+
     }
 
     

@@ -56,7 +56,7 @@ class FF{
         int Getpin() {
             return bits;
         }
-        map<string, Pins> GetPinlist() {
+        map<string, Pins>& GetPinlist() {
             return PinList;
         }
         Pins GetPins(string s) {
@@ -67,6 +67,10 @@ class FF{
         }
         double Getcostperpin(double beta ,double gamma){
             return beta*Width*Height+gamma*Power/pinCount;
+        }
+        int getbit()
+        {
+            return bits;
         }
 
 };

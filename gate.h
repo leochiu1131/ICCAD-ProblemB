@@ -32,7 +32,7 @@ class Gate{
         int GetpinCount() {
             return pinCount;
         }
-        map<string, Pins> GetPinlist() {
+        map<string, Pins>& GetPinlist() {
             return PinList;
         }
         Pins GetPins(string s) {

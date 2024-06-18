@@ -92,14 +92,14 @@ class Nets{
                     pin_name = s.substr(pos + 1);
                 }    
                 instance& inst=inst_lib.find(inst_name)->second;
-                cout<<"qsize"<<Qnetlist.size();
+                //cout<<"qsize"<<Qnetlist.size();
                 for(auto qit=Qnetlist.begin();qit!=Qnetlist.end();qit++)
                 {   
                     
                     inst.todpin.insert(pair<string,Pins>(pin_name,qit->second));
                 }
-                cout<<"outsize"<<OUTnetlist.size();
-                for(auto qit=OUTnetlist.begin();qit!=OUTnetlist.end();qit++)
+                //cout<<"outsize"<<OUTnetlist.size();
+                 for(auto qit=INnetlist.begin();qit!=INnetlist.end();qit++)
                 {   
                     
                     inst.todpin.insert(pair<string,Pins>(pin_name,qit->second));
@@ -107,7 +107,7 @@ class Nets{
                 
 
             }
-            for(auto dit=Dnetlist.begin();dit!=Dnetlist.end();dit++)
+            for(auto dit=Qnetlist.begin();dit!=Qnetlist.end();dit++)
             {
                 string s=dit->first;
                 size_t pos = s.find('/');
@@ -119,18 +119,20 @@ class Nets{
                     pin_name = s.substr(pos + 1);
                 }    
                 instance& inst=inst_lib.find(inst_name)->second;
-                cout<<"dsize"<<Dnetlist.size();
+                //cout<<"dsize"<<Dnetlist.size();
                 for(auto qit=Dnetlist.begin();qit!=Dnetlist.end();qit++)
                 {   
                     
                     inst.toqpin.insert(pair<string,Pins>(pin_name,qit->second));
+                    
                 }
-                for(auto qit=INnetlist.begin();qit!=INnetlist.end();qit++)
+              
+                 for(auto qit=OUTnetlist.begin();qit!=OUTnetlist.end();qit++)
                 {   
                     
                     inst.toqpin.insert(pair<string,Pins>(pin_name,qit->second));
+                    cout<<"outt";
                 }
-                
 
             }
 

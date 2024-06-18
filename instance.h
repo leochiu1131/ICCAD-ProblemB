@@ -22,7 +22,7 @@ class instance{
         instance(){
 
         }
-        string Getname(){
+        string Getlibname(){
             return libname;
         }
         bool Gettype() {
@@ -32,25 +32,65 @@ class instance{
             libname = s; 
             type = t;
         }
-        void SetX(float x) {
+  void SetX(float x) 
+        {
             leftdownx = x;
-            map<string, Pins> templist;
-            if (!type)templist = fftype.GetPinlist();
-            else templist=gatetype.GetPinlist();
+            
+            if (!type)
+            {
+                map<string, Pins>& templist = fftype.GetPinlist();
+                for (auto P = templist.begin();P!=templist.end();P++) {
                 
-            for (auto& P : templist) {
-                P.second.addX(x);
-            }
-        }
-        void SetY(float y) {
-            leftdowny = y;
-            map<string, Pins> templist;
-            if (!type)templist = fftype.GetPinlist();
-            else templist = gatetype.GetPinlist();
+                cout << P->second.getx()<<"to";
+                P->second.addX(x);
+                cout << P->second.getx()<<endl;
+                }
 
-            for (auto& P : templist) {
-                P.second.addY(y);
             }
+            else 
+            {
+                map<string, Pins>& templist = gatetype.GetPinlist();
+                for (auto P = templist.begin();P!=templist.end();P++) {
+                
+                cout << P->second.getx()<<"to";
+                P->second.addY(x);
+                cout << P->second.getx()<<endl;
+                }
+
+            }
+            
+
+            
+        }
+        void SetY(float y) 
+        {
+            leftdowny = y;
+            
+            if (!type)
+            {
+                map<string, Pins>& templist = fftype.GetPinlist();
+                for (auto P = templist.begin();P!=templist.end();P++) {
+                
+                cout << P->second.gety()<<"to";
+                P->second.addY(y);
+                cout << P->second.gety()<<endl;
+                }
+
+            }
+            else 
+            {
+                map<string, Pins>& templist = gatetype.GetPinlist();
+                for (auto P = templist.begin();P!=templist.end();P++) {
+                
+                cout << P->second.gety()<<"to";
+                P->second.addY(y);
+                cout << P->second.gety()<<endl;
+                }
+
+            }
+            
+
+            
         }
         void SetFF(FF f) {
             fftype = f;
