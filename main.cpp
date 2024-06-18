@@ -55,12 +55,21 @@ int main() {
 
     string s;
     double num;
-    cout<<"staSSrt";
-    infile.open("sampleCase.txt");
+    cout<<"start";
+    infile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\sampleCase");
     //sample.txt
     //testcase1.txt
+    if(infile.is_open())
+    {
 
+    }
+    else
+    {
+        cout<<"notopen";
+        return 3;
+    }
     infile >> s; //Alpha
+    cout<<s;
     infile >> Alpha;
     infile >> s; //Beta
     infile >> Beta;
@@ -77,6 +86,7 @@ int main() {
 
     infile >> s; //Number of Input
     infile >> num;
+    cout<<s;
     for (int i = 0; i < num; i++) {
         int coodinate;
         Pins tempPin;
@@ -177,9 +187,13 @@ int main() {
     }
 
     cout << "inst" << endl;
+    
     //s:NumInstance
+    
     int instanceCount;
+   
     infile >> instanceCount; //instanceCount
+     cout<<instanceCount;
     for (int i = 0; i < instanceCount; i++) {
         if (i % 10000 == 0)cout << i << endl;
         //cout << i << endl;
@@ -235,7 +249,7 @@ int main() {
             }
             tempnet.add(inst_lib, s,inst_name,pin_name,pos,Input_pins,Output_pins);
             
-           // tempnet.settopin(inst_lib);
+            tempnet.settopin(inst_lib);
             /*F = s.c_str();
             len = sscanf_s(F, "%[^/]%c%s", part1, 100, slash, 5, part2, 100);
             if (len == 3) {
