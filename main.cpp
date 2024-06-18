@@ -55,7 +55,8 @@ int main() {
 
     string s;
     double num;
-    infile.open("testcase1.txt");
+    cout<<"staSSrt";
+    infile.open("sampleCase.txt");
     //sample.txt
     //testcase1.txt
 
@@ -204,7 +205,7 @@ int main() {
         inst_lib.insert(pair<string, instance>(instName, tempinst));
     }
 
-    cout << "net" << endl;
+    cout << "nett" << endl;
     vector<vector<string>>FF_same_CLK;     //找出有相同clk signal的FF
     bool CLK_ok;
 
@@ -233,6 +234,8 @@ int main() {
                 pin_name = s.substr(pos + 1);
             }
             tempnet.add(inst_lib, s,inst_name,pin_name,pos,Input_pins,Output_pins);
+            
+           // tempnet.settopin(inst_lib);
             /*F = s.c_str();
             len = sscanf_s(F, "%[^/]%c%s", part1, 100, slash, 5, part2, 100);
             if (len == 3) {

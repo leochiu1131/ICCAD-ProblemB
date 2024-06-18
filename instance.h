@@ -17,6 +17,8 @@ class instance{
         string libname;
         
     public:
+        map<string,Pins> todpin;
+        map<string,Pins> toqpin;
         instance(){
 
         }

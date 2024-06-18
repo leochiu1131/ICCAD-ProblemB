@@ -78,6 +78,64 @@ class Nets{
                 cout << inst_name << pin_name << "bug" << endl;
             }
         }
+        void settopin(unordered_map<string, instance>&inst_lib)
+        {
+            for(auto dit=Dnetlist.begin();dit!=Dnetlist.end();dit++)
+            {
+                string s=dit->first;
+                size_t pos = s.find('/');
+                string inst_name;
+                string pin_name;
+                if (pos != string::npos)
+                {
+                    inst_name = s.substr(0, pos);
+                    pin_name = s.substr(pos + 1);
+                }    
+                instance& inst=inst_lib.find(inst_name)->second;
+                cout<<"qsize"<<Qnetlist.size();
+                for(auto qit=Qnetlist.begin();qit!=Qnetlist.end();qit++)
+                {   
+                    
+                    inst.todpin.insert(pair<string,Pins>(pin_name,qit->second));
+                }
+                cout<<"outsize"<<OUTnetlist.size();
+                for(auto qit=OUTnetlist.begin();qit!=OUTnetlist.end();qit++)
+                {   
+                    
+                    inst.todpin.insert(pair<string,Pins>(pin_name,qit->second));
+                }
+                
+
+            }
+            for(auto dit=Dnetlist.begin();dit!=Dnetlist.end();dit++)
+            {
+                string s=dit->first;
+                size_t pos = s.find('/');
+                string inst_name;
+                string pin_name;
+                if (pos != string::npos)
+                {
+                    inst_name = s.substr(0, pos);
+                    pin_name = s.substr(pos + 1);
+                }    
+                instance& inst=inst_lib.find(inst_name)->second;
+                cout<<"dsize"<<Dnetlist.size();
+                for(auto qit=Dnetlist.begin();qit!=Dnetlist.end();qit++)
+                {   
+                    
+                    inst.toqpin.insert(pair<string,Pins>(pin_name,qit->second));
+                }
+                for(auto qit=INnetlist.begin();qit!=INnetlist.end();qit++)
+                {   
+                    
+                    inst.toqpin.insert(pair<string,Pins>(pin_name,qit->second));
+                }
+                
+
+            }
+
+
+        }
         int GetSize() {
             return Dnetlist.size() + Qnetlist.size() + CLKnetlist.size() + INnetlist.size() + OUTnetlist.size();
         }
