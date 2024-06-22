@@ -31,11 +31,22 @@ class Pins{
         void SetSlack(double s) {
             slack = s;
         }
-        int getx()
+        double getx ()
+         
         {
             return LocationX;
         }
-        int gety()
+        double gety()
+        {
+            return LocationY;
+        }
+        double getx ()
+        const 
+        {
+            return LocationX;
+        }
+        double gety()
+        const
         {
             return LocationY;
         }

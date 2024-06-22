@@ -104,6 +104,11 @@ class Nets{
                     
                     inst.todpin.insert(pair<string,Pins>(pin_name,qit->second));
                 }
+                for(auto qit=OUTnetlist.begin();qit!=OUTnetlist.end();qit++)
+                {   
+                    
+                    inst.todpin.insert(pair<string,Pins>(pin_name,qit->second));
+                }
                 
 
             }
@@ -132,6 +137,11 @@ class Nets{
                     
                     inst.toqpin.insert(pair<string,Pins>(pin_name,qit->second));
                     //cout<<"outt";
+                }
+                 for(auto qit=INnetlist.begin();qit!=INnetlist.end();qit++)
+                {   
+                    
+                    inst.toqpin.insert(pair<string,Pins>(pin_name,qit->second));
                 }
 
             }

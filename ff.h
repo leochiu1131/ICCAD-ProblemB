@@ -8,6 +8,7 @@ using namespace std;
 FlipFlop 1 FF1 5 10 2
 Pin D 0 8
 Pin Q 5 8*/
+
 class FF{
     private:
         int bits;
@@ -18,7 +19,7 @@ class FF{
         double QpinDelay;
         double Power;      
         map<string,Pins>PinList;
-        map<string,pair<Pins,Pins>> Pinpair;//D0,Q0
+        
     public:
         FF(){
 
@@ -65,12 +66,20 @@ class FF{
         double Getcost(double beta ,double gamma){
             return beta*Width*Height+gamma*Power;
         }
-        double Getcostperpin(double beta ,double gamma){
-            return beta*Width*Height+gamma*Power/pinCount;
+        double Getcostperbit(double beta ,double gamma){
+            return (beta*Width*Height+gamma*Power)/bits;
         }
         int getbit()
         {
             return bits;
+        }
+        double Getdelay()
+        {
+            return QpinDelay;
+        }
+        double getarea()
+        {
+            return Width*Height;
         }
 
 };

@@ -15,6 +15,9 @@ class instance{
         Gate gatetype;
         bool type; //0:FF,1:Gate
         string libname;
+        double slack;
+        
+    
         
     public:
         map<string,Pins> todpin;
@@ -106,19 +109,29 @@ class instance{
                 return gatetype.GetPins(s);
             }
         }
-        void SetSlack(string s, double x) {
-            if (!type) {
-                fftype.SetSlack(s,x);
-            }
-            else {
-                gatetype.SetSlack(s, x);
-            }
+        void SetSlack( double x) {
+            
+            slack=x;
         }
         double GetX() {
             return leftdownx;
         }
         double GetY() {
             return leftdowny;
+        }
+        double Getdelay()
+        {
+            return fftype.Getdelay();
+        }
+        double Getslack()
+        {
+            return slack;
+        }
+        FF getff()
+        {
+                return fftype;
+            
+
         }
 };
 

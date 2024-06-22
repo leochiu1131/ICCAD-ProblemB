@@ -9,6 +9,7 @@
 #include "gate.h"
 #include "net.h"
 #include "instance.h"
+#include "estimate.cpp"
 using namespace std;
 struct placement {
     double startX;
@@ -27,7 +28,109 @@ void Merge(vector<instance>FF_same_CLK, bool** placement_check, vector<placement
     vector<vector<instance>>New_FF,Old_FF;
     
 }
+   
+int clique_test(clique& nowclique,map<string,pinpair>& totest_Pinpair, map<string, FF>&FF_lib2,double a,double b,double c,double displacemaentdelay)
+{
+        bool success=0;
+        double x=nowclique.centerx*nowclique.clique_member.size();
+        double y=nowclique.centery*nowclique.clique_member.size();
+        for(auto it=totest_Pinpair.begin();it!=totest_Pinpair.end();it++)
+        {
+            
+            
+            x+=it->second.todpin.getx();
+            y+=it->second.toqpin.gety();   
+        }
+        x/=(nowclique.clique_member.size()+totest_Pinpair.size());
+        y/=(nowclique.clique_member.size()+totest_Pinpair.size());
+        double maxgain=0;
+        FF mergeff;
+        string mergeffname;
+        Pins center;
+        center.SetX(x);
+        center.SetY(y);
+        //cout<<nowclique.ffname<<"FFNAME"<<endl;
+        
+        cout<<nowclique.flipflop.getarea()<<endl;
+        double prevcost=nowclique.flipflop.Getcostperbit(b,c)*(nowclique.clique_member.size()+totest_Pinpair.size());
+        cout<<"prevcost="<<prevcost<<endl;
+        for(auto fit=FF_lib2.begin();fit!=FF_lib2.end();fit++)
+        {
 
+            double nowffcost=fit->second.Getcost(b,c);
+            cout<<"nowcost="<<nowffcost<<endl;
+            double totalslackcost=0;
+            for(auto it=nowclique.clique_member.begin();it!=nowclique.clique_member.end();it++)
+            {
+                double displacement=0;
+                double difference=(distance(it->second.todpin,center)-it->second.GetDdistance());
+                if(difference>0)
+                {
+                    displacement+=difference;
+                }
+                difference=(distance(it->second.toqpin,center)-it->second.GetDdistance());
+                if(difference>0)
+                {
+                    displacement+=difference;
+                }
+                double slack =it->second.Getslack()-displacemaentdelay*displacement-fit->second.Getdelay()+it->second.getdelay();
+                if(slack<0)
+                {
+                    totalslackcost-=a*slack;
+                }
+
+
+            }
+            for(auto it=totest_Pinpair.begin();it!=totest_Pinpair.end();it++)
+            {
+                double displacement=0;
+                double difference=(distance(it->second.todpin,center)-it->second.GetDdistance());
+                if(difference>0)
+                {
+                    displacement+=difference;
+                }
+                difference=(distance(it->second.toqpin,center)-it->second.GetDdistance());
+                if(difference>0)
+                {
+                    displacement+=difference;
+                }
+                double slack =it->second.Getslack()-a*displacement-fit->second.Getdelay()+it->second.getdelay();
+                if(slack<0)
+                {
+                    totalslackcost-=slack;
+                }
+                if(totalslackcost>prevcost)
+                {
+                    success=-1;
+                }
+               
+
+            }
+             double nowgain= prevcost-fit->second.Getcost(b,c)-totalslackcost;
+                if(nowgain>maxgain)
+                {
+                    maxgain=nowgain;
+                    mergeffname=fit->first;
+                    mergeff=fit->second;
+                    success=1;
+                }
+            
+               // cout<<fit->first<<endl;
+
+        }
+        if(success==1)
+        {
+            nowclique.merge_clique(totest_Pinpair,mergeff);
+            nowclique.ffname=(mergeffname);
+            cout<<mergeffname<<"mergesucces"<<endl;
+        }
+        
+       
+        return  success;
+
+
+
+}
 int main() {
     double Alpha, Beta, Gamma, Lambda;
 
@@ -55,8 +158,8 @@ int main() {
 
     string s;
     double num;
-    cout<<"start";
-    infile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\testcase1_0614.txt");
+    cout<<"start"<<endl;
+    infile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\sampleCase");
     //sample.txt
     //testcase1.txt
     if(infile.is_open())
@@ -116,7 +219,7 @@ int main() {
     }
 
     infile >> s; //flip_flop
-    
+    cout<<endl<<s<<endl;
     while (s == "FlipFlop" || s == "Gate") {
         if (s == "FlipFlop") {
             FF tempFF;
@@ -129,8 +232,11 @@ int main() {
 
             infile >> num;   //flipflop Width
             tempFF.SetWidth(num);
+            cout<<"width="<<num<<endl;
+
             infile >> num;   //flipflop Height
             tempFF.SetHeight(num);
+            cout<<"height="<<num<<endl;
             infile >> num;   //flipflop pinCount
             tempFF.SetpinCount(num);
 
@@ -186,7 +292,8 @@ int main() {
         }
         infile >> s;
     }
-
+    int maxff=FF_lib2.rbegin()->first;
+    cout<<"maxff="<<maxff;
     cout << "inst" << endl;
     
     //s:NumInstance
@@ -220,14 +327,15 @@ int main() {
         inst_lib.insert(pair<string, instance>(instName, tempinst));
         
     }
-    cout<<inst_lib["reg1"].GetPins("D").gety()<<"ss"<<endl;
-    cout << "nett" << endl;
+   
+    cout << "nettd" << endl;
     vector<vector<string>>FF_same_CLK;     //找出有相同clk signal的FF
     bool CLK_ok;
 
     infile >> s; //NumNets
     int netCount;
     infile >> netCount;
+    cout<<netCount<<"ne"<<endl;
     vector<string>FF_same_CLK_temp;
     for (int i = 0; i < netCount; i++) {
         if (i % 10000 == 0)cout << i << endl;
@@ -294,13 +402,15 @@ int main() {
     }
 
     infile >> s; //BinWidth
+    cout<<s;
     infile >> BinWidth;
     infile >> s; //BinHeight
     infile >> BinHeight;
     infile >> s; //BinMaxUtil
     infile >> BinMaxUtil;
-
+    cout<<s;
     infile >> s; //PlacementRows;
+    cout<<s;
     while (s == "PlacementRows") {
         placement temp;
         infile >> temp.startX;
@@ -346,7 +456,7 @@ int main() {
         infile >> s; //instance name
         infile >> temp;
         infile >> num;
-        inst_lib[s].SetSlack(temp, num);
+        inst_lib[s].SetSlack(num);
         infile >> s;
     }
 
@@ -362,47 +472,136 @@ int main() {
     for (int i = 0; i < FF_same_CLK.size(); i++)
     {
         cout <<"ffclk" <<i<<" " <<FF_same_CLK[i].size()<<endl;
-        map<string,pair<Pins,Pins>> topin;
+        map<string,pinpair> topin;
         for(int j=0;j<FF_same_CLK[i].size();j++)
         {
             
             string nowinstname=FF_same_CLK.at(i).at(j);
             instance nowinst=inst_lib[nowinstname];
-            cout<<nowinstname<<endl;
+            //cout<<nowinstname<<endl;
             FF nowff=FF_lib[nowinst.Getlibname()];
-            if(nowff.getbit()>1)
-            {
+            
                  for(int k=0;k<nowff.getbit();k++)
-                {    
-                    Pins temptoD =nowinst.todpin["D"+to_string(k)];
-                    Pins temptoQ =nowinst.toqpin["Q"+to_string(k)];
-                    pair<Pins,Pins> temppair(temptoD,temptoQ);
-                    topin.insert(pair<string,pair<Pins,Pins>>(nowinstname+to_string(k),temppair));
+                {   
+                    string pinindex= to_string(k);
+                    Pins temptoD =nowinst.todpin["D"+pinindex];
+                    Pins temptoQ =nowinst.toqpin["Q"+pinindex];
+                    pinpair temppinpair(temptoD,temptoQ,nowinst,pinindex);
+                    
+                    topin.insert(pair<string,pinpair>(nowinstname+"/"+to_string(k),temppinpair));
                 }
                
-            }
-             else
-                {
-                    Pins temptoD =nowinst.todpin["D"];
-                    Pins temptoQ =nowinst.toqpin["Q"];
-                    pair<Pins,Pins> temppair(temptoD,temptoQ);
-                    topin.insert(pair<string,pair<Pins,Pins>>(nowinstname,temppair));
-                }
+            
+             
         
         
             
         }
         for(auto it=topin.begin();it!=topin.end();it++)
         {
-            cout<<"to"<<it->first<<" "<<it->second.first.getx()<<","<<it->second.first.gety()<<"-"<<it->second.second.getx()<<","<<it->second.second.gety()<<endl;
-            //COMBINATIAL GATE 顯示不出待查
+            cout<<it->first<<"xx"<<endl;
         }
-       
+        vector<clique> newff;
+        map<string,pinpair>to_test;
+        
+        while(topin.size())
+        {   
+            size_t pos = topin.begin()->first.find('/');
+            string inst_name;
+            string pin_name;
+            if (pos != string::npos) {
+                inst_name = topin.begin()->first.substr(0, pos);
+                pin_name = topin.begin()->first.substr(pos + 1);
+            }
+            FF tempff=inst_lib[inst_name].getff();
+            map<string,pinpair> temppair;
+            temppair.insert(pair<string,pinpair>(topin.begin()->first,topin.begin()->second));
+            clique tempclique(temppair,tempff);
+            tempclique.ffname=inst_lib[inst_name].Getlibname();
+           // cout<<tempclique.ffname<<"tt";
+            double pincount=1;
+           
+            int success;
+            
+            do
+            {
+                string nearst=find_nearst_pinpair_outof_clique(topin,tempclique);
+                
+                if(topin.find(nearst)!=topin.end())
+                {
+                    pinpair nearst_pinpair=pinpair(topin[nearst]);
+                    string nearst_neearst=find_nearst_pinpair(topin,nearst_pinpair.todpin,nearst_pinpair.toqpin);
+                    auto inclique=tempclique.clique_member.find(nearst_neearst);
+                
+                    if(inclique!=tempclique.clique_member.end())
+                    {
+                      to_test.insert(pair<string,pinpair>(nearst,nearst_pinpair));
+                      pincount++;
 
+                        
+                    }
+                    else
+                    {
+                     to_test.insert(pair<string,pinpair>(nearst,nearst_pinpair));
+                     to_test.insert(pair<string,pinpair>(nearst_neearst,topin[nearst_neearst]));
+                     pincount+=2;
+                    }
+                    for(auto it=tempclique.clique_member.begin();it!=tempclique.clique_member.end();it++)
+                    {
+                        cout<<it->first<<"inclique"<<endl;
+                    }
+                    for(auto it=to_test.begin();it!=to_test.end();it++)
+                    {
+                        cout<<it->first<<"to_test"<<endl;
+                    }
+                    success=clique_test(tempclique,to_test,FF_lib2[pincount],Alpha,Beta,Gamma,DisplacementDelay);
+                    cout<<"soccess="<<success<<endl;
+                }
+                else
+                {
+                    cout<<nearst<<"nearstnotfound"<<endl;
+                    break;
+                }
+                
+
+            } while (success==1&&pincount<maxff);
+            to_test.clear();
+            
+            newff.push_back(tempclique);
+            for(auto it=tempclique.clique_member.begin();it!=tempclique.clique_member.end();it++)
+            {
+                auto included=topin.find(it->first);
+                if(included!=topin.end())
+                {
+                    
+                    topin.erase(included);
+                }
+            }
+          
+        }
+       // cout<<"maxff="<<maxff<<endl;
+        cout<<"newff---------------------" <<endl; 
+        for(auto it=newff.begin();it!=newff.end();it++)
+        {
+            cout<<it->ffname<<endl;
+            for(auto pit=it->clique_member.begin();pit!=it->clique_member.end();pit++)
+            {
+              cout<<pit->first<<endl;
+            }
+            cout<<endl;
+
+        }
+            
+         
+            //cout<<"to"<<it->first<<" "<<it->second.todpin.getx()<<","<<it->second.todpin.gety()<<"-"<<it->second.toqpin.getx()<<","<<it->second.toqpin.gety()<<endl;
+            //COMBINATIAL GATE 顯示不出待查
+        
+       
+ 
 
     }
 
-    
+   
 
 
 
