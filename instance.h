@@ -131,6 +131,10 @@ class instance{
         {
                 return fftype;
             
+        }
+        Gate getgate()
+        {
+            return gatetype;
 
         }
 };

@@ -38,6 +38,14 @@ class Gate{
         Pins GetPins(string s) {
             return PinList[s];
         }
+        double getheight()
+        {
+            return Height;
+        }
+        double getwidth()
+        {
+            return Width;
+        }
 };
 
 
