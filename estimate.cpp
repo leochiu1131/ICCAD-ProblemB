@@ -239,7 +239,7 @@ class clique
 
     }
 };
-map<string,int> set_corespond_pin(clique& nowclique,map<string,pinpair>& totest_Pinpair,FF& flipflop);
+
  string find_nearst_pinpair_outof_clique(map<string,pinpair>& topin,clique&nowclique)
     {
         double mindistance=__DBL_MAX__;
@@ -326,7 +326,9 @@ map<string,int> set_corespond_pin(clique& nowclique,map<string,pinpair>& totest_
     double down=nowclique.down;
     double left=nowclique.left;
     double right=nowclique.right;
+
     map<string,int> corespond;
+    //cout<<"uu";
     map<string,pinpair> tobematch=nowclique.clique_member;
     //cout<<"l"<<left<<"r"<<right<<"u"<<up<<"d"<<down<<endl;
     for(auto it=totest_Pinpair.begin();it!=totest_Pinpair.end();it++)
@@ -369,6 +371,7 @@ map<string,int> set_corespond_pin(clique& nowclique,map<string,pinpair>& totest_
             }
     }
     //cout<<"l"<<left<<"r"<<right<<"u"<<up<<"d"<<down<<endl;
+    //cout<<"qdsize"<<flipflop.qdpinpair.size()<<endl;
     for(int k=0;k<flipflop.qdpinpair.size();k++)
     {
         Pins d=flipflop.qdpinpair[k].first;
@@ -378,7 +381,7 @@ map<string,int> set_corespond_pin(clique& nowclique,map<string,pinpair>& totest_
         double qx=q.getx()/flipflop.getwidth();
          double qy=q.gety()/flipflop.getheight();
         //cout<<dx<<" ,"<<dy<<qx<<" ,"<<qy<<endl;
-        double min=4;
+        double min=100;
         string corepinpair;
         for(auto it=tobematch.begin();it!=tobematch.end();it++)
         {
@@ -400,7 +403,7 @@ map<string,int> set_corespond_pin(clique& nowclique,map<string,pinpair>& totest_
 
         }
        
-
+       // cout<<corepinpair<<"cpin"<<endl;
         corespond.insert(pair<string,int>(corepinpair,k));
       // cout<<corepinpair<<"core"<<k<<endl;
     }
