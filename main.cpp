@@ -296,6 +296,7 @@ int main() {
     double num;
     cout << "start" << endl;
     infile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\testcase1_0614.txt");
+    outfile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\output.txt");
     //sample.txt
     //testcase1.txt
     //testcase1_0614.txt
@@ -809,6 +810,7 @@ int main() {
         cout << "newff---------------------" << endl;
         for (auto it = newff.begin(); it != newff.end(); it++)
         {
+            outfile << "inst C" << inst_num << " " << it->ffname << endl;
             cout << "inst C" << inst_num << " " << it->ffname << endl;
             if((*cit).size()>1)
             {
@@ -825,12 +827,15 @@ int main() {
                     pin_name = pit->first.substr(pos + 1);
                     }
                     oldff.insert(inst_name);
+                    outfile <<inst_name<<"/"<<"D"<<pin_name<< "map" << "C" << inst_num << "/D" << pit->second << endl;
+                    outfile << inst_name<<"/"<<"Q"<<pin_name << "map" << "C" << inst_num << "/Q" << pit->second << endl;
                     cout <<inst_name<<"/"<<"D"<<pin_name<< "map" << "C" << inst_num << "/D" << pit->second << endl;
                     cout << inst_name<<"/"<<"Q"<<pin_name << "map" << "C" << inst_num << "/Q" << pit->second << endl;
                 }
                 for(auto sit=oldff.begin();sit!=oldff.end();sit++ )
                 {
                     cout << *sit<<"/"<<"clk "  << "map" << "C" << inst_num << "/clk"  << endl;    
+                    outfile << *sit<<"/"<<"clk "  << "map" << "C" << inst_num << "/clk"  << endl;    
                 }
             }
             else
@@ -846,6 +851,9 @@ int main() {
                     inst_name = pit->first.substr(0, pos);
                     pin_name = pit->first.substr(pos + 1);
                     }
+                outfile <<inst_name<<"/"<<"D"<<pin_name<< "map" << "C" << inst_num << "/D"  << endl;
+                outfile << inst_name<<"/"<<"Q"<<pin_name  << "map" << "C" << inst_num << "/Q"  << endl;
+                outfile << inst_name<<"/"<<"clk "  << "map" << "C" << inst_num << "/clk"  << endl;    
                 cout <<inst_name<<"/"<<"D"<<pin_name<< "map" << "C" << inst_num << "/D"  << endl;
                 cout << inst_name<<"/"<<"Q"<<pin_name  << "map" << "C" << inst_num << "/Q"  << endl;
                 cout << inst_name<<"/"<<"clk "  << "map" << "C" << inst_num << "/clk"  << endl;
