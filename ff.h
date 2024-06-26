@@ -17,14 +17,45 @@ class FF{
         int pinCount;
         double cost;
         double QpinDelay;
-        double Power;      
-        map<string,Pins>PinList;
+        double Power;
+        map<string,Pins>PinList;    
+        
         
     public:
+    
+    map<int,pair<Pins,Pins>> qdpinpair;  
         FF(){
 
         }
-
+        double getheight()
+        {
+            return Height;
+        }
+        double getwidth()
+        {
+            return Width;
+        }
+        void setqdpinpair()
+        {
+            if(bits>1)
+            {
+                for(int i=0;i<bits;i++)
+                {
+                    Pins d=PinList.find("D"+to_string(i))->second;
+                    Pins q=PinList.find("Q"+to_string(i))->second;
+                    pair<Pins,Pins> tmp(d,q);
+                    qdpinpair.insert(pair<int,pair<Pins,Pins>>(i,tmp));
+                }
+            }
+            else
+            {
+                Pins d=PinList.find("D")->second;
+                Pins q=PinList.find("Q")->second;
+                pair<Pins,Pins> tmp(d,q);
+                qdpinpair.insert(pair<int,pair<Pins,Pins>>(0,tmp));
+            }
+            
+        }
         void add_Pin(string s, Pins p){
             
             PinList.insert(pair<string, Pins>(s, p));

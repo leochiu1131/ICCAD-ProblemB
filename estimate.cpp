@@ -11,9 +11,10 @@
 #include "net.h"
 #include "instance.h"
 using namespace std;
+
 double absd(double x)
 {
-    if(x>0)
+    if(x<0)
     {
         return x*-1;
     }
@@ -34,6 +35,7 @@ class pinpair
         double Qdistance;
         double Ddistance;
         double slack;
+      
 
     public:
     Pins todpin;
@@ -86,10 +88,15 @@ class pinpair
    }
 
 };
-
+class clique;
+map<string,int> set_corespond_pin(clique& nowclique,FF& flipflop);
 class clique
 {
     public:
+    double up;
+    double down;
+    double left;
+    double right;
     double centerx;
     double centery;
     FF flipflop;
@@ -104,7 +111,7 @@ class clique
        
         setdq();
     }
- 
+    
     void setdq()
     {
         double dx=0;
@@ -112,16 +119,52 @@ class clique
    
         double qx=0;
         double qy=0;
+        down=__DBL_MAX__;
+        left=__DBL_MAX__;
+        up=__DBL_MIN__;
+        right=__DBL_MIN__;
          for(auto it=clique_member.begin();it!=clique_member.end();it++)
         {
-            
+           //cout<<"qin"<<it->second.toqpin.getx()<<it->second.toqpin.gety()<<endl;
+          // cout<<"din"<<it->second.todpin.getx()<<it->second.toqpin.gety()<<endl;
             qx+=it->second.toqpin.getx();
           
             qy+=it->second.toqpin.gety();
             dx+=it->second.todpin.getx();
            
             dy+=it->second.todpin.gety();
-
+            if(it->second.toqpin.getx()>right)
+            {
+                right=it->second.toqpin.getx();
+            }
+             if(it->second.todpin.getx()>right)
+            {
+                right=it->second.todpin.getx();
+            }
+             if(it->second.toqpin.getx()<left)
+            {
+                left=it->second.toqpin.getx();
+            }
+             if(it->second.todpin.getx()<left)
+            {
+                left=it->second.todpin.getx();
+            }
+             if(it->second.toqpin.gety()>up)
+            {
+                up=it->second.toqpin.gety();
+            }
+            if(it->second.todpin.gety()>up)
+            {
+                up=it->second.todpin.gety();
+            }
+              if(it->second.toqpin.gety()<down)
+            {
+                down=it->second.toqpin.gety();
+            }
+            if(it->second.todpin.gety()<down)
+            {
+                down=it->second.todpin.gety();
+            }
 
         }
         aver_q_x=qx/clique_member.size();;
@@ -130,7 +173,7 @@ class clique
         aver_d_y=dy/clique_member.size();;
         centerx=(aver_q_x+aver_d_x)/2;
         centery=(aver_q_y+aver_d_y)/2;
-
+    // cout<<"sl"<<left<<"r"<<right<<"u"<<up<<"d"<<down<<endl;
 
     }
     
@@ -147,12 +190,44 @@ class clique
             
             clique_member.insert(*it);
             
-             qx+=it->second.toqpin.getx();
+            qx+=it->second.toqpin.getx();
           
             qy+=it->second.toqpin.gety();
             dx+=it->second.todpin.getx();
            
             dy+=it->second.todpin.gety();
+            if(it->second.toqpin.getx()>right)
+            {
+                right=it->second.toqpin.getx();
+            }
+             if(it->second.todpin.getx()>right)
+            {
+                right=it->second.todpin.getx();
+            }
+             if(it->second.toqpin.getx()<left)
+            {
+                left=it->second.toqpin.getx();
+            }
+             if(it->second.todpin.getx()<left)
+            {
+                left=it->second.todpin.getx();
+            }
+             if(it->second.toqpin.gety()>up)
+            {
+                up=it->second.toqpin.gety();
+            }
+            if(it->second.todpin.gety()>up)
+            {
+                up=it->second.todpin.gety();
+            }
+              if(it->second.toqpin.gety()<down)
+            {
+                down=it->second.toqpin.gety();
+            }
+            if(it->second.todpin.gety()<down)
+            {
+                down=it->second.todpin.gety();
+            }
         }
        aver_q_x=qx/clique_member.size();;
         aver_q_y=qy/clique_member.size();;
@@ -164,6 +239,7 @@ class clique
 
     }
 };
+map<string,int> set_corespond_pin(clique& nowclique,map<string,pinpair>& totest_Pinpair,FF& flipflop);
  string find_nearst_pinpair_outof_clique(map<string,pinpair>& topin,clique&nowclique)
     {
         double mindistance=__DBL_MAX__;
@@ -192,6 +268,8 @@ class clique
         return nearstpair;
 
     }
+    
+    
     /*
     string find_nearst_pinpair(map<string,pinpair>& topin,clique&nowclique)
     {
@@ -228,10 +306,8 @@ class clique
         for(auto it=topin.begin();it!=topin.end();it++)
         {
         
-
-            
                 double nowdistance=distance(it->second.todpin,d)+distance(it->second.toqpin,q);
-                if(nowdistance<mindistance)
+                if(nowdistance<mindistance&&nowdistance!=0)
                 {
                     mindistance=nowdistance;
                     nearstpair=it->first;
@@ -242,3 +318,144 @@ class clique
         return nearstpair;
 
     }
+map<string,int> set_corespond_pin(clique& nowclique,map<string,pinpair>& totest_Pinpair,FF& flipflop)
+{
+    double h=flipflop.getheight();
+    double w=flipflop.getwidth();
+    double up=nowclique.up;
+    double down=nowclique.down;
+    double left=nowclique.left;
+    double right=nowclique.right;
+    map<string,int> corespond;
+    map<string,pinpair> tobematch=nowclique.clique_member;
+    //cout<<"l"<<left<<"r"<<right<<"u"<<up<<"d"<<down<<endl;
+    for(auto it=totest_Pinpair.begin();it!=totest_Pinpair.end();it++)
+    {
+        tobematch.insert(pair<string,pinpair>(it->first,it->second));
+    }
+    for(auto it=totest_Pinpair.begin();it!=totest_Pinpair.end();it++)
+    {
+           if(it->second.toqpin.getx()>right)
+            {
+                right=it->second.toqpin.getx();
+            }
+             if(it->second.todpin.getx()>right)
+            {
+                right=it->second.todpin.getx();
+            }
+             if(it->second.toqpin.getx()<left)
+            {
+                left=it->second.toqpin.getx();
+            }
+             if(it->second.todpin.getx()<left)
+            {
+                left=it->second.todpin.getx();
+            }
+             if(it->second.toqpin.gety()>up)
+            {
+                up=it->second.toqpin.gety();
+            }
+            if(it->second.todpin.gety()>up)
+            {
+                up=it->second.todpin.gety();
+            }
+              if(it->second.toqpin.gety()<down)
+            {
+                down=it->second.toqpin.gety();
+            }
+            if(it->second.todpin.gety()<down)
+            {
+                down=it->second.todpin.gety();
+            }
+    }
+    //cout<<"l"<<left<<"r"<<right<<"u"<<up<<"d"<<down<<endl;
+    for(int k=0;k<flipflop.qdpinpair.size();k++)
+    {
+        Pins d=flipflop.qdpinpair[k].first;
+        Pins q=flipflop.qdpinpair[k].second;
+        double dx=d.getx()/flipflop.getwidth();
+        double dy=d.gety()/flipflop.getheight();
+        double qx=q.getx()/flipflop.getwidth();
+         double qy=q.gety()/flipflop.getheight();
+        //cout<<dx<<" ,"<<dy<<qx<<" ,"<<qy<<endl;
+        double min=4;
+        string corepinpair;
+        for(auto it=tobematch.begin();it!=tobematch.end();it++)
+        {
+
+        Pins td=it->second.todpin;    
+        Pins tq=it->second.toqpin;
+            
+        double tdx=(td.getx()-left)/right;
+        double tdy=(td.gety()-down)/up;
+        double tqx=(tq.getx()-left)/right;
+         double tqy=(tq.gety()-down)/up;
+       // cout<<it->first<<"c "<<" "<<tdx<<" ,"<<tdy<<" "<<tqx<<" ,"<<tqy<<endl;
+        double core_num=(absd(tdx-dx)+absd(tdy-dy))+absd(tqy-qy)+absd(tqx-qx);
+        if(core_num<min&&corespond.find(it->first)==corespond.end())
+            {
+                min=core_num;
+                corepinpair=it->first;
+            }
+
+        }
+       
+
+        corespond.insert(pair<string,int>(corepinpair,k));
+      // cout<<corepinpair<<"core"<<k<<endl;
+    }
+    return  corespond;
+
+
+}
+map<string,int> set_corespond_pin(clique& nowclique,FF& flipflop)
+{
+    double h=flipflop.getheight();
+    double w=flipflop.getwidth();
+    double up=nowclique.up;
+    double down=nowclique.down;
+    double left=nowclique.left;
+    double right=nowclique.right;
+    map<string,int> corespond;
+    map<string,pinpair> tobematch=nowclique.clique_member;
+    //cout<<"l"<<left<<"r"<<right<<"u"<<up<<"d"<<down<<endl;
+    
+    for(int k=0;k<flipflop.qdpinpair.size();k++)
+    {
+        Pins d=flipflop.qdpinpair[k].first;
+        Pins q=flipflop.qdpinpair[k].second;
+        double dx=d.getx()/flipflop.getwidth();
+        double dy=d.gety()/flipflop.getheight();
+        double qx=q.getx()/flipflop.getwidth();
+         double qy=q.gety()/flipflop.getheight();
+      //  cout<<dx<<" ,"<<dy<<qx<<" ,"<<qy<<endl;
+        double min=4;
+        string corepinpair;
+        for(auto it=tobematch.begin();it!=tobematch.end();it++)
+        {
+
+        Pins td=it->second.todpin;    
+        Pins tq=it->second.toqpin;
+            
+        double tdx=(td.getx()-left)/right;
+        double tdy=(td.gety()-down)/up;
+        double tqx=(tq.getx()-left)/right;
+         double tqy=(tq.gety()-down)/up;
+      //  cout<<it->first<<"c "<<" "<<tdx<<" ,"<<tdy<<" "<<tqx<<" ,"<<tqy<<endl;
+        double core_num=(absd(tdx-dx)+absd(tdy-dy))+absd(tqy-qy)+absd(tqx-qx);
+        if(core_num<min&&corespond.find(it->first)==corespond.end())
+            {
+                min=core_num;
+                corepinpair=it->first;
+            }
+
+        }
+       
+
+        corespond.insert(pair<string,int>(corepinpair,k));
+      // cout<<corepinpair<<"core"<<k<<endl;
+    }
+    return  corespond;
+
+
+}
