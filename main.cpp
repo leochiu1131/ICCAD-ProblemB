@@ -295,7 +295,7 @@ int main() {
     string s;
     double num;
     cout << "start" << endl;
-    infile.open("sample.txt");
+    infile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\testcase1_0614.txt");
     //sample.txt
     //testcase1.txt
     //testcase1_0614.txt
@@ -810,24 +810,45 @@ int main() {
         for (auto it = newff.begin(); it != newff.end(); it++)
         {
             cout << "inst C" << inst_num << " " << it->ffname << endl;
-            if(cores_pin.size>1)
+            if((*cit).size()>1)
             {
-
+               // cout<<"aa";
+                set<string> oldff;
                 for (auto pit = cit->begin(); pit != cit->end(); pit++)
                 {
-
-                    cout << pit->first << "map" << "C" << inst_num << "/D" << pit->second << endl;
-                    cout << pit->first << "map" << "C" << inst_num << "/Q" << pit->second << endl;
+                    
+                    size_t pos = pit->first.find('/');
+                    string inst_name;
+                     string pin_name;
+                    if (pos != string::npos) {
+                    inst_name = pit->first.substr(0, pos);
+                    pin_name = pit->first.substr(pos + 1);
+                    }
+                    oldff.insert(inst_name);
+                    cout <<inst_name<<"/"<<"D"<<pin_name<< "map" << "C" << inst_num << "/D" << pit->second << endl;
+                    cout << inst_name<<"/"<<"Q"<<pin_name << "map" << "C" << inst_num << "/Q" << pit->second << endl;
+                }
+                for(auto sit=oldff.begin();sit!=oldff.end();sit++ )
+                {
+                    cout << *sit<<"/"<<"clk "  << "map" << "C" << inst_num << "/clk"  << endl;    
                 }
             }
             else
             {
-                
+                //cout<<"sa";
                 for (auto pit = cit->begin(); pit != cit->end(); pit++)
                 {
 
-                cout << pit->first << "map" << "C" << inst_num << "/D"  << endl;
-                cout << pit->first << "map" << "C" << inst_num << "/Q"  << endl;
+                    size_t pos = pit->first.find('/');
+                    string inst_name;
+                    string pin_name;
+                    if (pos != string::npos) {
+                    inst_name = pit->first.substr(0, pos);
+                    pin_name = pit->first.substr(pos + 1);
+                    }
+                cout <<inst_name<<"/"<<"D"<<pin_name<< "map" << "C" << inst_num << "/D"  << endl;
+                cout << inst_name<<"/"<<"Q"<<pin_name  << "map" << "C" << inst_num << "/Q"  << endl;
+                cout << inst_name<<"/"<<"clk "  << "map" << "C" << inst_num << "/clk"  << endl;
                 }
             }
            
