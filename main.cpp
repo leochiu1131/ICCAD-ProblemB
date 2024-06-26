@@ -5,6 +5,8 @@
 #include <string>
 #include <fstream>
 #include <queue>
+#include <sstream>
+#include <iomanip>
 #include "pin.h"
 #include "ff.h"
 #include "gate.h"
@@ -12,6 +14,12 @@
 #include "instance.h"
 #include "estimate.cpp"
 using namespace std;
+struct X_And_Y {
+    double x;
+    double y;
+    double Out_X () const { return x; }
+    double Out_Y () const { return y; }
+};
 struct placement {
     double startX;
     double startY;
@@ -84,9 +92,28 @@ bool BFS(FF after, instance& ok_instance, double**& placement_check, vector<plac
     }
     return false;
 }
-void find_the_position(vector<instance>Old_FF, vector<instance>New_FF, map<string, FF>& FF_lib, double**& placement_check,
+X_And_Y find_the_position(map<string, pinpair>clique_member, map<string, FF>& FF_lib, double**& placement_check,
     vector<placement>& placementRow, unordered_map<string, instance>& inst_lib, string name //name代表需要改成的Flip Flop library name
-    ) {
+) {
+    vector<string>old_ff;
+    vector<instance>Old_FF;
+    for (auto it = clique_member.begin(); it != clique_member.end(); it++) {
+        string s = it->first;
+        size_t pos = s.find('/');
+        string inst_name = s.substr(0, pos);
+        if (old_ff.size() == 0) {
+            Old_FF.push_back(inst_lib[inst_name]);
+        }
+        else {
+            bool ok = 1;
+            for (int i = 0; i < old_ff.size(); i++) {
+                if (Old_FF[i].Getlibname() == inst_name) {
+                    ok = 0;
+                }
+            }
+            if (ok)Old_FF.push_back(inst_lib[inst_name]);
+        }
+    }
     int average_x = 0, average_y = 0;
     int startX = placementRow[0].startX, startY = placementRow[0].startY;
     //W:寬的間隔長度 H:高的間隔長度
@@ -121,10 +148,10 @@ void find_the_position(vector<instance>Old_FF, vector<instance>New_FF, map<strin
     bool ok = 0;
     instance temp;
     temp.SetFF(after);
-    if (BFS(after, temp, placement_check, placementRow, average_x, average_y, W, H)) {
 
+    if (BFS(after, temp, placement_check, placementRow, average_x, average_y, W, H)) {
         int temp_x = temp.GetX(); temp_x = (temp_x - startX) / W;
-        int temp_y = temp.GetY(); temp_y = (temp_y - startY) / W;
+        int temp_y = temp.GetY(); temp_y = (temp_y - startY) / H;
         int temp_x_right = after.getwidth() / W;
         int temp_y_right = after.getheight() / H;
         for (int i = temp_x; i <= temp_x + temp_x_right; i++) {
@@ -138,13 +165,17 @@ void find_the_position(vector<instance>Old_FF, vector<instance>New_FF, map<strin
                 placement_check[i][j] = l * r;
             }
         }
-        New_FF.push_back(temp);
+        X_And_Y re;
+        re.x = temp.GetX(); re.y = temp.GetY();
+        return re;
     }
     else {
         cout << "can't" << endl;
+        while (true) {
+
+        }
     }
 }
-
 double compute_area(double**& placement_check, int x, int y) {
     double area = 0.0;
     for (int i = 0; i < x; i++) {
@@ -158,7 +189,7 @@ int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair, map<str
 {
 
     bool success = 0;
-    cout << "xx" << endl;
+    //cout << "xx" << endl;
     double x = nowclique.centerx * nowclique.clique_member.size();
     double y = nowclique.centery * nowclique.clique_member.size();
     for (auto it = totest_Pinpair.begin(); it != totest_Pinpair.end(); it++)
@@ -215,7 +246,7 @@ int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair, map<str
                 // cout<<"ss";
                 if (topair == totest_Pinpair.end())
                 {
-                    cout << it->first << "error";
+                    //cout << it->first << "error";
                 }
                 double difference = (distance(topair->second.todpin, d) - topair->second.GetDdistance());
                 if (difference > 0)
@@ -295,8 +326,8 @@ int main() {
     string s;
     double num;
     cout << "start" << endl;
-    infile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\testcase1_0614.txt");
-    outfile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\output.txt");
+    infile.open("testcase1_0614.txt");
+    outfile.open("output0614.txt");
     //sample.txt
     //testcase1.txt
     //testcase1_0614.txt
@@ -643,12 +674,13 @@ int main() {
         FF_lib[s].SetPower(num);
         infile >> s;
     }
-
+    vector<string>new_inst;
+    vector<vector<string>>new_map_list;
     cout << FF_same_CLK.size() << endl;
     int inst_num = inst_lib.size();
     for (int i = 0; i < FF_same_CLK.size(); i++)
     {
-        cout << "ffclk" << i << " " << FF_same_CLK[i].size() << endl;
+        //cout << "ffclk" << i << " " << FF_same_CLK[i].size() << endl;
         map<string, pinpair> topin;
 
         for (int j = 0; j < FF_same_CLK[i].size(); j++)
@@ -681,7 +713,7 @@ int main() {
                 pinpair temppinpair(temptoD, temptoQ, nowinst, pinindex);
                 //cout<<temptoQ.getx()<<"toq,"<<temptoQ.gety()<<endl;
                // cout<<temptoD.getx()<<"tod,"<<temptoD.gety()<<endl;
-                topin.insert(pair<string, pinpair>(nowinstname + "/" , temppinpair));
+                topin.insert(pair<string, pinpair>(nowinstname + "/", temppinpair));
             }
 
 
@@ -728,7 +760,7 @@ int main() {
                     pinpair nearst_pinpair = pinpair(topin[nearst]);
                     string nearst_neearst = find_nearst_pinpair(topin, nearst_pinpair.todpin, nearst_pinpair.toqpin);
                     auto inclique = tempclique.clique_member.find(nearst_neearst);
-                    cout << nearst << nearst_neearst << endl;
+                    //cout << nearst << nearst_neearst << endl;
                     pincount = tempclique.clique_member.size() + to_test.size();
                     if (pincount > maxff)
                     {
@@ -759,11 +791,11 @@ int main() {
 
                     for (auto it = tempclique.clique_member.begin(); it != tempclique.clique_member.end(); it++)
                     {
-                        cout << it->first << "inclique" << endl;
+                        //cout << it->first << "inclique" << endl;
                     }
                     for (auto it = to_test.begin(); it != to_test.end(); it++)
                     {
-                        cout << it->first << "to_test" << endl;
+                        //cout << it->first << "to_test" << endl;
                     }
                     tempclique.setdq();
                     pincount = tempclique.clique_member.size() + to_test.size();
@@ -771,9 +803,9 @@ int main() {
                     {
                         break;
                     }
-                    cout << pincount << endl;
+                    //cout << pincount << endl;
                     success = clique_test(tempclique, to_test, FF_lib2[pincount], Alpha, Beta, Gamma, DisplacementDelay);
-                    cout << "soccess=" << success << endl;
+                    //cout << "soccess=" << success << endl;
                     if (success == 1)
                     {
                         to_test.clear();
@@ -781,7 +813,7 @@ int main() {
                 }
                 else
                 {
-                    cout << nearst << "nearstnotfound" << endl;
+                    //cout << nearst << "nearstnotfound" << endl;
                     break;
                 }
 
@@ -807,40 +839,23 @@ int main() {
         }
         auto cit = cores_pin.begin();
         // cout<<"maxff="<<maxff<<endl;
-        cout << "newff---------------------" << endl;
+        //cout << "newff---------------------" << endl;
+        
         for (auto it = newff.begin(); it != newff.end(); it++)
         {
-            outfile << "inst C" << inst_num << " " << it->ffname << endl;
-            cout << "inst C" << inst_num << " " << it->ffname << endl;
-            if((*cit).size()>1)
+            stringstream ss;
+            string temp_inst;
+            X_And_Y temp_XY;
+            temp_XY=find_the_position(it->Getmember(), FF_lib, placement_check, placementRow, inst_lib, it->GetName());
+            ss << "Inst C" << inst_num << " " << it->ffname << " " << temp_XY.x << " " << temp_XY.y;
+            new_inst.push_back(ss.str());
+
+            vector<string>temp_map_list_one;
+            stringstream ss_2;
+            if ((*cit).size() > 1)
             {
-               // cout<<"aa";
+                // cout<<"aa";
                 set<string> oldff;
-                for (auto pit = cit->begin(); pit != cit->end(); pit++)
-                {
-                    
-                    size_t pos = pit->first.find('/');
-                    string inst_name;
-                     string pin_name;
-                    if (pos != string::npos) {
-                    inst_name = pit->first.substr(0, pos);
-                    pin_name = pit->first.substr(pos + 1);
-                    }
-                    oldff.insert(inst_name);
-                    outfile <<inst_name<<"/"<<"D"<<pin_name<< "map" << "C" << inst_num << "/D" << pit->second << endl;
-                    outfile << inst_name<<"/"<<"Q"<<pin_name << "map" << "C" << inst_num << "/Q" << pit->second << endl;
-                    cout <<inst_name<<"/"<<"D"<<pin_name<< "map" << "C" << inst_num << "/D" << pit->second << endl;
-                    cout << inst_name<<"/"<<"Q"<<pin_name << "map" << "C" << inst_num << "/Q" << pit->second << endl;
-                }
-                for(auto sit=oldff.begin();sit!=oldff.end();sit++ )
-                {
-                    cout << *sit<<"/"<<"clk "  << "map" << "C" << inst_num << "/clk"  << endl;    
-                    outfile << *sit<<"/"<<"clk "  << "map" << "C" << inst_num << "/clk"  << endl;    
-                }
-            }
-            else
-            {
-                //cout<<"sa";
                 for (auto pit = cit->begin(); pit != cit->end(); pit++)
                 {
 
@@ -848,33 +863,69 @@ int main() {
                     string inst_name;
                     string pin_name;
                     if (pos != string::npos) {
-                    inst_name = pit->first.substr(0, pos);
-                    pin_name = pit->first.substr(pos + 1);
+                        inst_name = pit->first.substr(0, pos);
+                        pin_name = pit->first.substr(pos + 1);
                     }
-                outfile <<inst_name<<"/"<<"D"<<pin_name<< "map" << "C" << inst_num << "/D"  << endl;
-                outfile << inst_name<<"/"<<"Q"<<pin_name  << "map" << "C" << inst_num << "/Q"  << endl;
-                outfile << inst_name<<"/"<<"clk "  << "map" << "C" << inst_num << "/clk"  << endl;    
-                cout <<inst_name<<"/"<<"D"<<pin_name<< "map" << "C" << inst_num << "/D"  << endl;
-                cout << inst_name<<"/"<<"Q"<<pin_name  << "map" << "C" << inst_num << "/Q"  << endl;
-                cout << inst_name<<"/"<<"clk "  << "map" << "C" << inst_num << "/clk"  << endl;
+                    oldff.insert(inst_name);
+                    ss_2 << inst_name << "/" << "D" << pin_name << " map " << "C" << inst_num << "/D" << pit->second;
+                    temp_map_list_one.push_back(ss_2.str());
+                    ss_2.str("");
+
+                    ss_2 << inst_name << "/" << "Q" << pin_name << " map " << "C" << inst_num << "/Q" << pit->second;
+                    temp_map_list_one.push_back(ss_2.str());
+                    ss_2.str("");
+                    
+                }
+                for (auto sit = oldff.begin(); sit != oldff.end(); sit++)
+                {
+                    ss_2 << *sit << "/" << "CLK" << " map " << "C" << inst_num << "/CLK";
+                    temp_map_list_one.push_back(ss_2.str());
+                    ss_2.str("");
                 }
             }
-           
+            else
+            {
+                for (auto pit = cit->begin(); pit != cit->end(); pit++)
+                {
+
+                    size_t pos = pit->first.find('/');
+                    string inst_name;
+                    string pin_name;
+                    if (pos != string::npos) {
+                        inst_name = pit->first.substr(0, pos);
+                        pin_name = pit->first.substr(pos + 1);
+                    }
+                    cout << "hiwer:" << inst_name << endl;
+                    ss_2 << inst_name << "/" << "D" << pin_name << " map " << "C" << inst_num << "/D";
+                    temp_map_list_one.push_back(ss_2.str());
+                    ss_2.str(""); //ss_2.clear();
+
+                    ss_2 << inst_name << "/" << "Q" << pin_name << " map " << "C" << inst_num << "/Q";
+                    temp_map_list_one.push_back(ss_2.str());
+                    ss_2.str("");//ss_2.clear();
+
+                    ss_2 << inst_name << "/" << "CLK" << " map " << "C" << inst_num << "/CLK";
+                    temp_map_list_one.push_back(ss_2.str());
+                    ss_2.str(""); //ss_2.clear();
+                }
+            }
+            new_map_list.push_back(temp_map_list_one);
             cit++;
             inst_num++;
-            cout << endl;
+            //cout << endl;
 
         }
-
-
-        //cout<<"to"<<it->first<<" "<<it->second.todpin.getx()<<","<<it->second.todpin.gety()<<"-"<<it->second.toqpin.getx()<<","<<it->second.toqpin.gety()<<endl;
-        //COMBINATIAL GATE 顯示不出待查
-
-
-
-
     }
+    outfile << "CellInst " << new_inst.size() << endl;
+    for (int i = 0; i < new_inst.size(); i++) {
+        outfile << new_inst[i] << endl;
+    }
+    for (int i = 0; i < new_map_list.size(); i++) {
+        for (int j = 0; j < new_map_list[i].size(); j++) {
+            outfile << new_map_list[i][j]<<endl;
 
+        }
+    }
 
 
 
@@ -883,4 +934,3 @@ int main() {
     outfile.close();
     return 0;
 }
-

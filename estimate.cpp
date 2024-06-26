@@ -111,7 +111,12 @@ class clique
        
         setdq();
     }
-    
+    map<string, pinpair> Getmember() {
+        return clique_member;
+    }
+    string GetName() {
+        return ffname;
+    }
     void setdq()
     {
         double dx=0;
@@ -119,10 +124,10 @@ class clique
    
         double qx=0;
         double qy=0;
-        down=__DBL_MAX__;
-        left=__DBL_MAX__;
-        up=__DBL_MIN__;
-        right=__DBL_MIN__;
+        down=DBL_MAX;
+        left=DBL_MAX;
+        up=DBL_MIN;
+        right=DBL_MIN;
          for(auto it=clique_member.begin();it!=clique_member.end();it++)
         {
            //cout<<"qin"<<it->second.toqpin.getx()<<it->second.toqpin.gety()<<endl;
@@ -242,7 +247,7 @@ class clique
 
  string find_nearst_pinpair_outof_clique(map<string,pinpair>& topin,clique&nowclique,map<string,pinpair>& to_test)
     {
-        double mindistance=__DBL_MAX__;
+        double mindistance=DBL_MAX;
         string nearstpair;
         Pins d;
         Pins q;
@@ -274,7 +279,7 @@ class clique
     /*
     string find_nearst_pinpair(map<string,pinpair>& topin,clique&nowclique)
     {
-        double mindistance=__DBL_MAX__;
+        double mindistance=DBL_MAX;
         string nearstpair;
         Pins d;
         Pins q;
@@ -301,7 +306,7 @@ class clique
     */
     string find_nearst_pinpair(map<string,pinpair>& topin,Pins& d,Pins&q)
     {
-        double mindistance=__DBL_MAX__;
+        double mindistance=DBL_MAX;
         string nearstpair=" ";
         
         for(auto it=topin.begin();it!=topin.end();it++)
