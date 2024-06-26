@@ -240,7 +240,7 @@ class clique
     }
 };
 
- string find_nearst_pinpair_outof_clique(map<string,pinpair>& topin,clique&nowclique)
+ string find_nearst_pinpair_outof_clique(map<string,pinpair>& topin,clique&nowclique,map<string,pinpair>& to_test)
     {
         double mindistance=__DBL_MAX__;
         string nearstpair;
@@ -254,7 +254,8 @@ class clique
         for(auto it=topin.begin();it!=topin.end();it++)
         {
             auto vit=nowclique.clique_member.find(it->first);
-            if(vit==nowclique.clique_member.end())
+            auto tit=to_test.find(it->first);
+            if(vit==nowclique.clique_member.end()&&tit==to_test.end())
             {
                 double nowdistance=distance(it->second.todpin,d)+distance(it->second.toqpin,q);
                 if(nowdistance<mindistance)

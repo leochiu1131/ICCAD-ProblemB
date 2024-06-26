@@ -52,8 +52,8 @@ int clique_test(clique& nowclique,map<string,pinpair>& totest_Pinpair, map<strin
         Pins center;
         center.SetX(x);
         center.SetY(y);
-        cout<<nowclique.ffname<<"FFNAME"<<endl;
-        cout<<nowclique.clique_member.size()+totest_Pinpair.size();
+       // cout<<nowclique.ffname<<"FFNAME"<<endl;
+       // cout<<nowclique.clique_member.size()+totest_Pinpair.size();
         //cout<<FF_lib2.size()<<"ss";
         //cout<<nowclique.flipflop.getarea()<<endl;
         double prevcost=nowclique.flipflop.Getcostperbit(b,c)*(nowclique.clique_member.size()+totest_Pinpair.size());
@@ -561,7 +561,7 @@ int main() {
             
             do
             {
-                string nearst=find_nearst_pinpair_outof_clique(topin,tempclique);
+                string nearst=find_nearst_pinpair_outof_clique(topin,tempclique,to_test);
                 
                 if(topin.find(nearst)!=topin.end())
                 {

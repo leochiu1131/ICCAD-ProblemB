@@ -11,7 +11,8 @@
         "iostream": "cpp",
         "*.tcc": "cpp",
         "ostream": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "xtree": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
