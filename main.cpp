@@ -680,7 +680,7 @@ int main() {
                 pinpair temppinpair(temptoD, temptoQ, nowinst, pinindex);
                 //cout<<temptoQ.getx()<<"toq,"<<temptoQ.gety()<<endl;
                // cout<<temptoD.getx()<<"tod,"<<temptoD.gety()<<endl;
-                topin.insert(pair<string, pinpair>(nowinstname + "/" + "0", temppinpair));
+                topin.insert(pair<string, pinpair>(nowinstname + "/" , temppinpair));
             }
 
 
@@ -810,12 +810,27 @@ int main() {
         for (auto it = newff.begin(); it != newff.end(); it++)
         {
             cout << "inst C" << inst_num << " " << it->ffname << endl;
-            for (auto pit = cit->begin(); pit != cit->end(); pit++)
+            if(cores_pin.size>1)
             {
 
-                cout << pit->first << "map" << "C" << inst_num << "/D" << pit->second << endl;
-                cout << pit->first << "map" << "C" << inst_num << "/Q" << pit->second << endl;
+                for (auto pit = cit->begin(); pit != cit->end(); pit++)
+                {
+
+                    cout << pit->first << "map" << "C" << inst_num << "/D" << pit->second << endl;
+                    cout << pit->first << "map" << "C" << inst_num << "/Q" << pit->second << endl;
+                }
             }
+            else
+            {
+                
+                for (auto pit = cit->begin(); pit != cit->end(); pit++)
+                {
+
+                cout << pit->first << "map" << "C" << inst_num << "/D"  << endl;
+                cout << pit->first << "map" << "C" << inst_num << "/Q"  << endl;
+                }
+            }
+           
             cit++;
             inst_num++;
             cout << endl;
