@@ -94,8 +94,8 @@ bool BFS(FF after, instance& ok_instance, double**& placement_check, vector<plac
     return false;
 }
 X_And_Y find_the_position(map<string, pinpair>clique_member, map<string, FF>& FF_lib, double**& placement_check,
-    vector<placement>& placementRow, unordered_map<string, instance>& inst_lib, string name,//name代表需要改成的Flip Flop library name
-    instance &re) {
+    vector<placement>& placementRow, unordered_map<string, instance>& inst_lib, string name //name代表需要改成的Flip Flop library name
+) {
     vector<string>old_ff;
     vector<instance>Old_FF;
     for (auto it = clique_member.begin(); it != clique_member.end(); it++) {
@@ -151,7 +151,6 @@ X_And_Y find_the_position(map<string, pinpair>clique_member, map<string, FF>& FF
     temp.SetFF(after);
 
     if (BFS(after, temp, placement_check, placementRow, average_x, average_y, W, H)) {
-        re = temp;
         int temp_x = temp.GetX(); temp_x = (temp_x - startX) / W;
         int temp_y = temp.GetY(); temp_y = (temp_y - startY) / H;
         int temp_x_right = after.getwidth() / W;
@@ -167,13 +166,13 @@ X_And_Y find_the_position(map<string, pinpair>clique_member, map<string, FF>& FF
                 placement_check[i][j] = l * r;
             }
         }
-        X_And_Y ree;
-        ree.x = temp.GetX(); ree.y = temp.GetY();
-        return ree;
+        X_And_Y re;
+        re.x = temp.GetX(); re.y = temp.GetY();
+        return re;
     }
     else {
-        X_And_Y ree; ree.x=0; ree.y=0;
-        return ree;
+        X_And_Y re; re.x=0; re.y=0;
+        return re;
     }
 }
 double compute_area(double**& placement_check, int x, int y) {
@@ -298,7 +297,7 @@ int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair, map<str
 
 }
 
-int main(int argc,char* argv[]) {
+int main() {
     double Alpha, Beta, Gamma, Lambda;
 
     double Die_LLeftX, Die_LLeftY, Die_URightX, Die_URightY;
@@ -309,6 +308,13 @@ int main(int argc,char* argv[]) {
     map<string, FF>FF_lib;
     map<int, map<string, FF>>FF_lib2;
     map<string, Gate>GG_lib;
+    double oldarea=0;
+    double oldslack=0;
+    double oldpower=0; 
+    double newarea=0;
+    double newslack=0;
+    double newpower=0; 
+
 
     unordered_map<string, instance>inst_lib;
     unordered_map<string, instance>inst_lib_new;
@@ -327,10 +333,10 @@ int main(int argc,char* argv[]) {
     string s;
     double num;
 
-    // infile.open("testcase1_0614.txt");
+     infile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\testcase1_0614.txt");
     // outfile.open("output0614.txt");
-    infile.open(argv[1]);
-    outfile.open(argv[2]);
+   // infile.open();
+    
     //sample.txt
     //testcase1.txt
     //testcase1_0614.txt
@@ -481,6 +487,7 @@ int main(int argc,char* argv[]) {
         tempinst.Setname(s, type);
         if (!tempinst.Gettype()) { //代表是flip flop
             tempinst.SetFF(FF_lib[s]);
+            oldarea+=FF_lib[s].getarea();
         }
         else { //代表是Gate
             tempinst.SetGate(GG_lib[s]);
@@ -493,7 +500,8 @@ int main(int argc,char* argv[]) {
         inst_lib.insert(pair<string, instance>(instName, tempinst));
 
     }
-
+    map<string,string> frompin;
+    map<string,double> fromdist;
 
     vector<vector<string>>FF_same_CLK;     //找出有相同clk signal的FF
     bool CLK_ok;
@@ -524,6 +532,7 @@ int main(int argc,char* argv[]) {
             tempnet.add(inst_lib, s, inst_name, pin_name, pos, Input_pins, Output_pins);
 
             tempnet.settopin(inst_lib);
+            tempnet.setfrompin(frompin);
             /*F = s.c_str();
             len = sscanf_s(F, "%[^/]%c%s", part1, 100, slash, 5, part2, 100);
             if (len == 3) {
@@ -564,7 +573,47 @@ int main(int argc,char* argv[]) {
             FF_same_CLK_temp.clear();
         }
     }
+    for(auto it=frompin.begin();it!=frompin.end();it++)
+    {
+        if((it->first).find("D")!=string::npos)
+        {
+            size_t pos = it->first.find('/');
+                    string inst_name;
+                    string pin_name;
+                    if (pos != string::npos) {
+                        inst_name = it->first.substr(0, pos);
+                        pin_name = it->first.substr(pos + 1);
+                    }
+                Pins d=inst_lib[inst_name].GetPins(pin_name);
+            if((it->second).find("Q")!=string::npos)
+            {
+                
+                size_t pos = it->second.find('/');
+                    string inst_name;
+                    string pin_name;
+                    if (pos != string::npos) {
+                        inst_name = it->second.substr(0, pos);
+                        pin_name = it->second.substr(pos + 1);
+                    }
+                Pins q=inst_lib[inst_name].GetPins(pin_name);
+                fromdist.insert(pair<string,double>(it->first,distance(d,q)));
+            }
+            else
+            {
+                string qs=frompin[it->second];
+                size_t pos = qs.find('/');
+                    string inst_name;
+                    string pin_name;
+                    if (pos != string::npos) {
+                        inst_name = qs.substr(0, pos);
+                        pin_name = qs.substr(pos + 1);
+                    }
+                Pins q=inst_lib[inst_name].GetPins(pin_name);
+                fromdist.insert(pair<string,double>(it->first,distance(d,q)));
 
+            }
+        }
+    }
     infile >> s; //BinWidth
     //cout<<s;
     infile >> BinWidth;
@@ -656,6 +705,10 @@ int main(int argc,char* argv[]) {
         infile >> temp;
         infile >> num;
         inst_lib[s].SetSlack(num);
+        if(num<0)
+        {
+            oldslack-=num;
+        }
         infile >> s;
     }
 
@@ -664,6 +717,7 @@ int main(int argc,char* argv[]) {
         infile >> s;
         infile >> num;
         FF_lib[s].SetPower(num);
+        oldpower+=num;
         infile >> s;
     }
     vector<string>new_inst;
@@ -835,17 +889,19 @@ int main(int argc,char* argv[]) {
         
         for (auto it = newff.begin(); it != newff.end(); it++)
         {
-            stringstream ss,ins;
+            stringstream ss;
             string temp_inst;
             X_And_Y temp_XY;
+           
             instance temp_re;
-            temp_XY=find_the_position(it->Getmember(), FF_lib, placement_check, placementRow, inst_lib, it->GetName(),temp_re);
+            temp_XY=find_the_position(it->Getmember(), FF_lib, placement_check, placementRow, inst_lib, it->GetName());
             ss << "Inst C" << inst_num << " " << it->ffname << " " << temp_XY.x << " " << temp_XY.y;
 
-            ins << "C" << inst_num;
-            inst_lib_new.insert(pair<string, instance>(ins.str(),temp_re));
-
+            cout << "C" << inst_num;
+            inst_lib_new.insert(pair<string, instance>(cout.str(),temp_re));
             new_inst.push_back(ss.str());
+            newarea+=it->flipflop.getarea();
+            newpower+=it->flipflop.getpoewer();
             vector<string>temp_map_list_one;
             stringstream ss_2;
             if ((*cit).size() > 1)
@@ -911,7 +967,6 @@ int main(int argc,char* argv[]) {
 
         }
     }
-    cout <<inst_lib_new.size()<<endl;
     outfile << "CellInst " << new_inst.size() << endl;
     for (int i = 0; i < new_inst.size(); i++) {
         outfile << new_inst[i] << endl;
@@ -925,7 +980,7 @@ int main(int argc,char* argv[]) {
 
 
 
-
+    cout<<"oldpower="<<oldpower<<"oldarea="<<oldarea<<"newpower="<<newpower<<"newarea="<<newarea<<endl;
     infile.close();
     outfile.close();
     return 0;
