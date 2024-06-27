@@ -35,6 +35,10 @@ class FF{
         {
             return Width;
         }
+        double getpoewer()
+        {
+            return Power;
+        }
         void setqdpinpair()
         {
             if(bits>1)

@@ -308,6 +308,13 @@ int main(int argc,char* argv[]) {
     map<string, FF>FF_lib;
     map<int, map<string, FF>>FF_lib2;
     map<string, Gate>GG_lib;
+    double oldarea=0;
+    double oldslack=0;
+    double oldpower=0; 
+    double newarea=0;
+    double newslack=0;
+    double newpower=0; 
+
 
     unordered_map<string, instance>inst_lib;
     map<string, Nets>Net_Lib;
@@ -479,6 +486,7 @@ int main(int argc,char* argv[]) {
         tempinst.Setname(s, type);
         if (!tempinst.Gettype()) { //代表是flip flop
             tempinst.SetFF(FF_lib[s]);
+            oldarea+=FF_lib[s].getarea();
         }
         else { //代表是Gate
             tempinst.SetGate(GG_lib[s]);
@@ -654,6 +662,10 @@ int main(int argc,char* argv[]) {
         infile >> temp;
         infile >> num;
         inst_lib[s].SetSlack(num);
+        if(num<0)
+        {
+            oldslack-=num;
+        }
         infile >> s;
     }
 
@@ -662,6 +674,7 @@ int main(int argc,char* argv[]) {
         infile >> s;
         infile >> num;
         FF_lib[s].SetPower(num);
+        oldpower+=num;
         infile >> s;
     }
     vector<string>new_inst;
@@ -839,7 +852,8 @@ int main(int argc,char* argv[]) {
             temp_XY=find_the_position(it->Getmember(), FF_lib, placement_check, placementRow, inst_lib, it->GetName());
             ss << "Inst C" << inst_num << " " << it->ffname << " " << temp_XY.x << " " << temp_XY.y;
             new_inst.push_back(ss.str());
-
+            newarea+=it->flipflop.getarea();
+            newpower+=it->flipflop.getpoewer();
             vector<string>temp_map_list_one;
             stringstream ss_2;
             if ((*cit).size() > 1)
@@ -918,7 +932,7 @@ int main(int argc,char* argv[]) {
 
 
 
-
+    cout<<"oldpower="<<oldpower<<"oldarea="<<oldarea<<"newpower="<<newpower<<"newarea="<<newarea<<endl;
     infile.close();
     outfile.close();
     return 0;
