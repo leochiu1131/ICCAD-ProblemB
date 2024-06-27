@@ -171,10 +171,9 @@ X_And_Y find_the_position(map<string, pinpair>clique_member, map<string, FF>& FF
         return re;
     }
     else {
-        cout << "can't" << endl;
-        while (true) {
-
-        }
+        cout<<"cant"<<endl;
+        re.x = temp.GetX(); re.y = temp.GetY();
+        return re;
     }
 }
 double compute_area(double**& placement_check, int x, int y) {
@@ -326,7 +325,7 @@ int main(int argc,char* argv[]) {
 
     string s;
     double num;
-    cout << "start" << endl;
+
     // infile.open("testcase1_0614.txt");
     // outfile.open("output0614.txt");
     infile.open(argv[1]);
@@ -344,7 +343,6 @@ int main(int argc,char* argv[]) {
         return 0;
     }
     infile >> s; //Alpha
-    cout << s;
     infile >> Alpha;
     infile >> s; //Beta
     infile >> Beta;
@@ -361,7 +359,6 @@ int main(int argc,char* argv[]) {
 
     infile >> s; //Number of Input
     infile >> num;
-    cout << s;
     for (int i = 0; i < num; i++) {
         int coodinate;
         Pins tempPin;
@@ -391,7 +388,6 @@ int main(int argc,char* argv[]) {
     }
 
     infile >> s; //flip_flop
-    cout << endl << s << endl;
     while (s == "FlipFlop" || s == "Gate") {
         if (s == "FlipFlop") {
             FF tempFF;
@@ -400,15 +396,12 @@ int main(int argc,char* argv[]) {
 
             string ffname;
             infile >> ffname;//flipflop name
-            cout << ffname << endl;
 
             infile >> num;   //flipflop Width
             tempFF.SetWidth(num);
-            cout << "width=" << num << endl;
 
             infile >> num;   //flipflop Height
             tempFF.SetHeight(num);
-            cout << "height=" << num << endl;
             infile >> num;   //flipflop pinCount
             tempFF.SetpinCount(num);
 
@@ -468,8 +461,6 @@ int main(int argc,char* argv[]) {
         infile >> s;
     }
     int maxff = FF_lib2.rbegin()->first;
-    cout << "maxff=" << maxff;
-    cout << "inst" << endl;
 
     //s:NumInstance
 
@@ -478,8 +469,6 @@ int main(int argc,char* argv[]) {
     infile >> instanceCount; //instanceCount
     // cout<<instanceCount<<endl;
     for (int i = 0; i < instanceCount; i++) {
-        if (i % 10000 == 0)cout << i << endl;
-        //cout << i << endl;
         instance tempinst;
         infile >> s; //Inst
         string instName;
@@ -503,17 +492,15 @@ int main(int argc,char* argv[]) {
 
     }
 
-    cout << "nettd" << endl;
+
     vector<vector<string>>FF_same_CLK;     //找出有相同clk signal的FF
     bool CLK_ok;
 
     infile >> s; //NumNets
     int netCount;
     infile >> netCount;
-    cout << netCount << "ne" << endl;
     vector<string>FF_same_CLK_temp;
     for (int i = 0; i < netCount; i++) {
-        if (i % 10000 == 0)cout << i << endl;
         //For record
         CLK_ok = 0;
         infile >> s; //Net
@@ -608,7 +595,7 @@ int main(int argc,char* argv[]) {
         }
     }
 
-    cout << "placement_check" << endl;
+  
     for (auto& it : inst_lib) {
         int temp_x = it.second.GetX();
         int temp_y = it.second.GetY();
@@ -679,7 +666,7 @@ int main(int argc,char* argv[]) {
     }
     vector<string>new_inst;
     vector<vector<string>>new_map_list;
-    cout << FF_same_CLK.size() << endl;
+
     int inst_num = inst_lib.size();
     for (int i = 0; i < FF_same_CLK.size(); i++)
     {
@@ -898,7 +885,6 @@ int main(int argc,char* argv[]) {
                         inst_name = pit->first.substr(0, pos);
                         pin_name = pit->first.substr(pos + 1);
                     }
-                    cout << "hiwer:" << inst_name << endl;
                     ss_2 << inst_name << "/" << "D" << pin_name << " map " << "C" << inst_num << "/D";
                     temp_map_list_one.push_back(ss_2.str());
                     ss_2.str(""); //ss_2.clear();
