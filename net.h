@@ -78,6 +78,43 @@ class Nets{
                 cout << inst_name << pin_name << "bug" << endl;
             }
         }
+        void setfrompin(map<string,string>& frompin)
+        {
+            for(auto dit=Dnetlist.begin();dit!=Dnetlist.end();dit++)
+            {
+                string s=dit->first;
+                 for(auto qit=Qnetlist.begin();qit!=Qnetlist.end();qit++)
+                {   
+                    
+                    frompin.insert(pair<string,string>(s,qit->first));
+                    continue;
+                }
+                //cout<<"outsize"<<OUTnetlist.size();
+                 for(auto qit=INnetlist.begin();qit!=INnetlist.end();qit++)
+                {   
+                    
+                    frompin.insert(pair<string,string>(s,qit->first));
+                    continue;
+                    
+                }
+                for(auto qit=OUTnetlist.begin();qit!=OUTnetlist.end();qit++)
+                {   
+                    
+                    frompin.insert(pair<string,string>(s,qit->first));
+                    continue;
+                }
+            }
+            for(auto dit=Dnetlist.begin();dit!=Dnetlist.end();dit++)
+            {
+                string s=dit->first;
+                for(auto qit=Qnetlist.begin();qit!=Qnetlist.end();qit++)
+                {   
+                    
+                    frompin.insert(pair<string,string>(s,qit->first));
+                    continue;
+                }
+            }
+        }
         void settopin(unordered_map<string, instance>&inst_lib)
         {
             for(auto dit=Dnetlist.begin();dit!=Dnetlist.end();dit++)
