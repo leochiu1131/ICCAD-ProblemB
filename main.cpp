@@ -13,6 +13,7 @@
 #include "net.h"
 #include "instance.h"
 #include "estimate.cpp"
+#include<cfloat>
 using namespace std;
 struct X_And_Y {
     double x;
@@ -298,7 +299,7 @@ int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair, map<str
 
 }
 
-int main() {
+int main(int argc,char* argv[]) {
     double Alpha, Beta, Gamma, Lambda;
 
     double Die_LLeftX, Die_LLeftY, Die_URightX, Die_URightY;
@@ -326,8 +327,10 @@ int main() {
     string s;
     double num;
     cout << "start" << endl;
-    infile.open("testcase1_0614.txt");
-    outfile.open("output0614.txt");
+    // infile.open("testcase1_0614.txt");
+    // outfile.open("output0614.txt");
+    infile.open(argv[1]);
+    outfile.open(argv[2]);
     //sample.txt
     //testcase1.txt
     //testcase1_0614.txt
