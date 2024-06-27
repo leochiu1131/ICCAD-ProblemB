@@ -94,8 +94,8 @@ bool BFS(FF after, instance& ok_instance, double**& placement_check, vector<plac
     return false;
 }
 X_And_Y find_the_position(map<string, pinpair>clique_member, map<string, FF>& FF_lib, double**& placement_check,
-    vector<placement>& placementRow, unordered_map<string, instance>& inst_lib, string name //name代表需要改成的Flip Flop library name
-) {
+    vector<placement>& placementRow, unordered_map<string, instance>& inst_lib, string name,//name代表需要改成的Flip Flop library name
+    instance &re) {
     vector<string>old_ff;
     vector<instance>Old_FF;
     for (auto it = clique_member.begin(); it != clique_member.end(); it++) {
@@ -151,6 +151,7 @@ X_And_Y find_the_position(map<string, pinpair>clique_member, map<string, FF>& FF
     temp.SetFF(after);
 
     if (BFS(after, temp, placement_check, placementRow, average_x, average_y, W, H)) {
+        re = temp;
         int temp_x = temp.GetX(); temp_x = (temp_x - startX) / W;
         int temp_y = temp.GetY(); temp_y = (temp_y - startY) / H;
         int temp_x_right = after.getwidth() / W;
@@ -166,13 +167,13 @@ X_And_Y find_the_position(map<string, pinpair>clique_member, map<string, FF>& FF
                 placement_check[i][j] = l * r;
             }
         }
-        X_And_Y re;
-        re.x = temp.GetX(); re.y = temp.GetY();
-        return re;
+        X_And_Y ree;
+        ree.x = temp.GetX(); ree.y = temp.GetY();
+        return ree;
     }
     else {
-        X_And_Y re; re.x=0; re.y=0;
-        return re;
+        X_And_Y ree; ree.x=0; ree.y=0;
+        return ree;
     }
 }
 double compute_area(double**& placement_check, int x, int y) {
@@ -308,15 +309,9 @@ int main(int argc,char* argv[]) {
     map<string, FF>FF_lib;
     map<int, map<string, FF>>FF_lib2;
     map<string, Gate>GG_lib;
-    double oldarea=0;
-    double oldslack=0;
-    double oldpower=0; 
-    double newarea=0;
-    double newslack=0;
-    double newpower=0; 
-
 
     unordered_map<string, instance>inst_lib;
+    unordered_map<string, instance>inst_lib_new;
     map<string, Nets>Net_Lib;
 
     double BinWidth, BinHeight, BinMaxUtil;
@@ -486,7 +481,6 @@ int main(int argc,char* argv[]) {
         tempinst.Setname(s, type);
         if (!tempinst.Gettype()) { //代表是flip flop
             tempinst.SetFF(FF_lib[s]);
-            oldarea+=FF_lib[s].getarea();
         }
         else { //代表是Gate
             tempinst.SetGate(GG_lib[s]);
@@ -662,10 +656,6 @@ int main(int argc,char* argv[]) {
         infile >> temp;
         infile >> num;
         inst_lib[s].SetSlack(num);
-        if(num<0)
-        {
-            oldslack-=num;
-        }
         infile >> s;
     }
 
@@ -674,7 +664,6 @@ int main(int argc,char* argv[]) {
         infile >> s;
         infile >> num;
         FF_lib[s].SetPower(num);
-        oldpower+=num;
         infile >> s;
     }
     vector<string>new_inst;
@@ -846,14 +835,17 @@ int main(int argc,char* argv[]) {
         
         for (auto it = newff.begin(); it != newff.end(); it++)
         {
-            stringstream ss;
+            stringstream ss,ins;
             string temp_inst;
             X_And_Y temp_XY;
-            temp_XY=find_the_position(it->Getmember(), FF_lib, placement_check, placementRow, inst_lib, it->GetName());
+            instance temp_re;
+            temp_XY=find_the_position(it->Getmember(), FF_lib, placement_check, placementRow, inst_lib, it->GetName(),temp_re);
             ss << "Inst C" << inst_num << " " << it->ffname << " " << temp_XY.x << " " << temp_XY.y;
+
+            ins << "C" << inst_num;
+            inst_lib_new.insert(pair<string, instance>(ins.str(),temp_re));
+
             new_inst.push_back(ss.str());
-            newarea+=it->flipflop.getarea();
-            newpower+=it->flipflop.getpoewer();
             vector<string>temp_map_list_one;
             stringstream ss_2;
             if ((*cit).size() > 1)
@@ -919,6 +911,7 @@ int main(int argc,char* argv[]) {
 
         }
     }
+    cout <<inst_lib_new.size()<<endl;
     outfile << "CellInst " << new_inst.size() << endl;
     for (int i = 0; i < new_inst.size(); i++) {
         outfile << new_inst[i] << endl;
@@ -932,7 +925,7 @@ int main(int argc,char* argv[]) {
 
 
 
-    cout<<"oldpower="<<oldpower<<"oldarea="<<oldarea<<"newpower="<<newpower<<"newarea="<<newarea<<endl;
+
     infile.close();
     outfile.close();
     return 0;
