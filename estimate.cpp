@@ -10,6 +10,7 @@
 #include "gate.h"
 #include "net.h"
 #include "instance.h"
+#include<cfloat>
 using namespace std;
 
 double absd(double x)
