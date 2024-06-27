@@ -333,7 +333,7 @@ int main() {
     string s;
     double num;
 
-     infile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\testcase1_0614.txt");
+     infile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\sampleCase");
     // outfile.open("output0614.txt");
    // infile.open();
     
@@ -595,6 +595,13 @@ int main() {
                         inst_name = it->second.substr(0, pos);
                         pin_name = it->second.substr(pos + 1);
                     }
+                    else
+                    {
+                        Pins q=Input_pins[it->second];
+                        fromdist.insert(pair<string,double>(it->first,distance(d,q)));
+
+                        continue;
+                    }  
                 Pins q=inst_lib[inst_name].GetPins(pin_name);
                 fromdist.insert(pair<string,double>(it->first,distance(d,q)));
             }
@@ -608,6 +615,13 @@ int main() {
                         inst_name = it->second.substr(0, pos);
                         pin_name = it->second.substr(pos + 1);
                     }
+                    else
+                    {
+                        Pins q=Input_pins[it->second];
+                        fromdist.insert(pair<string,double>(it->first,distance(d,q)));
+
+                        continue;
+                    }    
                 Pins mid=inst_lib[inst_name].GetPins(pin_name);
                 string qs=frompin[it->second];
                      pos = qs.find('/');
@@ -1022,6 +1036,13 @@ int main() {
                         inst_name = s.substr(0, pos);
                         pin_name = s.substr(pos + 1);
                     }
+                     else
+                    {
+                        Pins q=Input_pins[it->second];
+                        fromdist.insert(pair<string,double>(it->first,distance(d,q)));
+
+                        continue;
+                    }  
                 Pins mid=inst_lib_new[inst_name].GetPins(pin_name);
 
                 string qs=oldtonew[frompin[it->second]];
