@@ -171,8 +171,7 @@ X_And_Y find_the_position(map<string, pinpair>clique_member, map<string, FF>& FF
         return re;
     }
     else {
-        cout<<"cant"<<endl;
-        re.x = temp.GetX(); re.y = temp.GetY();
+        X_And_Y re; re.x=0; re.y=0;
         return re;
     }
 }
@@ -333,6 +332,7 @@ int main(int argc,char* argv[]) {
     //sample.txt
     //testcase1.txt
     //testcase1_0614.txt
+
     if (infile.is_open())
     {
 
