@@ -610,9 +610,8 @@ int main() {
                     }
                 Pins mid=inst_lib[inst_name].GetPins(pin_name);
                 string qs=frompin[it->second];
-                size_t pos = qs.find('/');
-                    string inst_name;
-                    string pin_name;
+                     pos = qs.find('/');
+                   
                     if (pos != string::npos) {
                         inst_name = qs.substr(0, pos);
                         pin_name = qs.substr(pos + 1);
@@ -929,12 +928,12 @@ int main() {
                     }
                     oldff.insert(inst_name);
                     ss_2 << inst_name << "/" << "D" << pin_name << " map " << "C" << inst_num << "/D" << pit->second;
-                    oldtonew.insert(pair<string,string>(inst_name + "/" + "D" +pin_name,"C" +inst_num + "/D" + pit->second));
+                    oldtonew.insert(pair<string,string>(inst_name + "/" + "D" +pin_name,"C" +to_string(inst_num) + "/D" + to_string(pit->second)));
                     temp_map_list_one.push_back(ss_2.str());
                     ss_2.str("");
 
                     ss_2 << inst_name << "/" << "Q" << pin_name << " map " << "C" << inst_num << "/Q" << pit->second;
-                    oldtonew.insert(pair<string,string>(inst_name + "/" + "Q" +pin_name,"C" +inst_num + "/Q" + pit->second));
+                    oldtonew.insert(pair<string,string>(inst_name + "/" + "Q" +pin_name,"C" +to_string(inst_num)  + "/Q" + to_string(pit->second)));
                     temp_map_list_one.push_back(ss_2.str());
                     ss_2.str("");
                     
@@ -959,12 +958,12 @@ int main() {
                         pin_name = pit->first.substr(pos + 1);
                     }
                     ss_2 << inst_name << "/" << "D" << pin_name << " map " << "C" << inst_num << "/D";
-                    oldtonew.insert(pair<string,string>(inst_name + "/" + "D" ,"C" +inst_num + "/D" ));
+                    oldtonew.insert(pair<string,string>(inst_name + "/" + "D" ,"C" +to_string(inst_num ) + "/D" ));
                     temp_map_list_one.push_back(ss_2.str());
                     ss_2.str(""); //ss_2.clear();
 
                     ss_2 << inst_name << "/" << "Q" << pin_name << " map " << "C" << inst_num << "/Q";
-                    oldtonew.insert(pair<string,string>(inst_name + "/" + "Q" ,"C" +inst_num + "Q" ));
+                    oldtonew.insert(pair<string,string>(inst_name + "/" + "Q" ,"C" +to_string(inst_num )  + "Q" ));
                     temp_map_list_one.push_back(ss_2.str());
                     ss_2.str("");//ss_2.clear();
 
@@ -994,7 +993,7 @@ int main() {
                         inst_name = s.substr(0, pos);
                         pin_name = s.substr(pos + 1);
                     }
-                Pins d=inst_new_lib[inst_name].GetPins(pin_name);
+                Pins d=inst_lib_new[inst_name].GetPins(pin_name);
             if((it->second).find("Q")!=string::npos)
             {
                 string s=oldtonew[it->second];   
@@ -1005,9 +1004,9 @@ int main() {
                         inst_name = s.substr(0, pos);
                         pin_name = s.substr(pos + 1);
                     }
-                Pins q=inst_new_lib[inst_name].GetPins(pin_name);
+                Pins q=inst_lib_new[inst_name].GetPins(pin_name);
                 double dispace=distance(d,q);
-                double tmp=inst_lib[it->first].Getslack()+inst_lib[it->first].Getdelay()-inst_new_lib[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
+                double tmp=inst_lib[it->first].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
                 if(tmp<0)
                 {
                     newslack+=tmp;
@@ -1023,19 +1022,18 @@ int main() {
                         inst_name = s.substr(0, pos);
                         pin_name = s.substr(pos + 1);
                     }
-                Pins mid=inst_new_lib[inst_name].GetPins(pin_name);
+                Pins mid=inst_lib_new[inst_name].GetPins(pin_name);
 
                 string qs=oldtonew[frompin[it->second]];
-                size_t pos = qs.find('/');
-                    string inst_name;
-                    string pin_name;
+                 pos = qs.find('/');
+                    
                     if (pos != string::npos) {
                         inst_name = qs.substr(0, pos);
                         pin_name = qs.substr(pos + 1);
                     }
-                Pins q=inst_new_lib[inst_name].GetPins(pin_name);
+                Pins q=inst_lib_new[inst_name].GetPins(pin_name);
                 double dispace=distance(d,mid)+distance(mid,q);
-                double tmp=inst_lib[it->first].Getslack()+inst_lib[it->first].Getdelay()-inst_new_lib[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
+                double tmp=inst_lib[it->first].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
                 if(tmp<0)
                 {
                     newslack+=tmp;
@@ -1045,11 +1043,7 @@ int main() {
             }
         }
     }
-    for(auto it =frompin.begin();it!=frompin.end();it++)
-    {
-        
-        double temp=inst_lib[it->first].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[oldtonew[it->first]].Getdelay()+DisplacementDelay*        
-    }
+
     outfile << "CellInst " << new_inst.size() << endl;
     for (int i = 0; i < new_inst.size(); i++) {
         outfile << new_inst[i] << endl;
@@ -1063,7 +1057,7 @@ int main() {
 
 
 
-    cout<<"oldpower="<<oldpower<<"oldarea="<<oldarea<<"newpower="<<newpower<<"newarea="<<newarea<<endl;
+    cout<<"oldpower="<<oldpower<<"oldarea="<<oldarea<<"oldslack="<<oldslack<<"newpower="<<newpower<<"newarea="<<newarea<<"newslack="<<newslack<<endl;
     infile.close();
     outfile.close();
     return 0;
