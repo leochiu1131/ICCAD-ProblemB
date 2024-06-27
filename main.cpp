@@ -600,6 +600,15 @@ int main() {
             }
             else
             {
+
+                size_t pos = it->second.find('/');
+                    string inst_name;
+                    string pin_name;
+                    if (pos != string::npos) {
+                        inst_name = it->second.substr(0, pos);
+                        pin_name = it->second.substr(pos + 1);
+                    }
+                Pins mid=inst_lib[inst_name].GetPins(pin_name);
                 string qs=frompin[it->second];
                 size_t pos = qs.find('/');
                     string inst_name;
@@ -609,7 +618,7 @@ int main() {
                         pin_name = qs.substr(pos + 1);
                     }
                 Pins q=inst_lib[inst_name].GetPins(pin_name);
-                fromdist.insert(pair<string,double>(it->first,distance(d,q)));
+                fromdist.insert(pair<string,double>(it->first,distance(d,mid)+distance(mid,q)));
 
             }
         }
@@ -722,7 +731,7 @@ int main() {
     }
     vector<string>new_inst;
     vector<vector<string>>new_map_list;
-
+    map<string,string> oldtonew;
     int inst_num = inst_lib.size();
     for (int i = 0; i < FF_same_CLK.size(); i++)
     {
@@ -898,7 +907,7 @@ int main() {
             ss << "Inst C" << inst_num << " " << it->ffname << " " << temp_XY.x << " " << temp_XY.y;
 
             cout << "C" << inst_num;
-            inst_lib_new.insert(pair<string, instance>(cout.str(),temp_re));
+            inst_lib_new.insert(pair<string, instance>("C"+to_string(inst_num),temp_re));
             new_inst.push_back(ss.str());
             newarea+=it->flipflop.getarea();
             newpower+=it->flipflop.getpoewer();
@@ -920,10 +929,12 @@ int main() {
                     }
                     oldff.insert(inst_name);
                     ss_2 << inst_name << "/" << "D" << pin_name << " map " << "C" << inst_num << "/D" << pit->second;
+                    oldtonew.insert(pair<string,string>(inst_name + "/" + "D" +pin_name,"C" +inst_num + "/D" + pit->second));
                     temp_map_list_one.push_back(ss_2.str());
                     ss_2.str("");
 
                     ss_2 << inst_name << "/" << "Q" << pin_name << " map " << "C" << inst_num << "/Q" << pit->second;
+                    oldtonew.insert(pair<string,string>(inst_name + "/" + "Q" +pin_name,"C" +inst_num + "/Q" + pit->second));
                     temp_map_list_one.push_back(ss_2.str());
                     ss_2.str("");
                     
@@ -940,7 +951,7 @@ int main() {
                 for (auto pit = cit->begin(); pit != cit->end(); pit++)
                 {
 
-                    size_t pos = pit->first.find('/');
+                    size_t pos = pit->first.find('/');  
                     string inst_name;
                     string pin_name;
                     if (pos != string::npos) {
@@ -948,10 +959,12 @@ int main() {
                         pin_name = pit->first.substr(pos + 1);
                     }
                     ss_2 << inst_name << "/" << "D" << pin_name << " map " << "C" << inst_num << "/D";
+                    oldtonew.insert(pair<string,string>(inst_name + "/" + "D" ,"C" +inst_num + "/D" ));
                     temp_map_list_one.push_back(ss_2.str());
                     ss_2.str(""); //ss_2.clear();
 
                     ss_2 << inst_name << "/" << "Q" << pin_name << " map " << "C" << inst_num << "/Q";
+                    oldtonew.insert(pair<string,string>(inst_name + "/" + "Q" ,"C" +inst_num + "Q" ));
                     temp_map_list_one.push_back(ss_2.str());
                     ss_2.str("");//ss_2.clear();
 
@@ -966,6 +979,76 @@ int main() {
             //cout << endl;
 
         }
+    }
+    for(auto it=frompin.begin();it!=frompin.end();it++)
+    
+    {
+        double newdist=0;
+        if((it->first).find("D")!=string::npos)
+        {
+            string s=oldtonew[it->first];
+            size_t pos = s.find('/');
+                    string inst_name;
+                    string pin_name;
+                    if (pos != string::npos) {
+                        inst_name = s.substr(0, pos);
+                        pin_name = s.substr(pos + 1);
+                    }
+                Pins d=inst_new_lib[inst_name].GetPins(pin_name);
+            if((it->second).find("Q")!=string::npos)
+            {
+                string s=oldtonew[it->second];   
+                size_t pos = s.find('/');
+                    string inst_name;
+                    string pin_name;
+                    if (pos != string::npos) {
+                        inst_name = s.substr(0, pos);
+                        pin_name = s.substr(pos + 1);
+                    }
+                Pins q=inst_new_lib[inst_name].GetPins(pin_name);
+                double dispace=distance(d,q);
+                double tmp=inst_lib[it->first].Getslack()+inst_lib[it->first].Getdelay()-inst_new_lib[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
+                if(tmp<0)
+                {
+                    newslack+=tmp;
+                }
+            }
+            else
+            {
+                string s=oldtonew[it->second];   
+                size_t pos = s.find('/');
+                    string inst_name;
+                    string pin_name;
+                    if (pos != string::npos) {
+                        inst_name = s.substr(0, pos);
+                        pin_name = s.substr(pos + 1);
+                    }
+                Pins mid=inst_new_lib[inst_name].GetPins(pin_name);
+
+                string qs=oldtonew[frompin[it->second]];
+                size_t pos = qs.find('/');
+                    string inst_name;
+                    string pin_name;
+                    if (pos != string::npos) {
+                        inst_name = qs.substr(0, pos);
+                        pin_name = qs.substr(pos + 1);
+                    }
+                Pins q=inst_new_lib[inst_name].GetPins(pin_name);
+                double dispace=distance(d,mid)+distance(mid,q);
+                double tmp=inst_lib[it->first].Getslack()+inst_lib[it->first].Getdelay()-inst_new_lib[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
+                if(tmp<0)
+                {
+                    newslack+=tmp;
+                }
+                
+
+            }
+        }
+    }
+    for(auto it =frompin.begin();it!=frompin.end();it++)
+    {
+        
+        double temp=inst_lib[it->first].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[oldtonew[it->first]].Getdelay()+DisplacementDelay*        
     }
     outfile << "CellInst " << new_inst.size() << endl;
     for (int i = 0; i < new_inst.size(); i++) {
