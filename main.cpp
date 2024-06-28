@@ -15,6 +15,7 @@
 #include "estimate.cpp"
 #include<cfloat>
 using namespace std;
+double totalestslack=0;
 struct X_And_Y {
     double x;
     double y;
@@ -229,12 +230,15 @@ int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair, map<str
             Pins d = fit->second.qdpinpair.at(it->second).first;
             d.addX(center.getx() - (fit->second.getwidth() / 2));
             d.addY(center.gety() - (fit->second.getheight() / 2));
+            Pins q = fit->second.qdpinpair.at(it->second).second;
+            q.addX(center.getx() - (fit->second.getwidth() / 2));
+            q.addY(center.gety() - (fit->second.getheight() / 2));
 
             auto topair = nowclique.clique_member.find(it->first);
             if (topair != nowclique.clique_member.end())
             {
 
-                double difference = (distance(topair->second.todpin, d) - topair->second.GetDdistance());
+                double difference = (distance(topair->second.todpin, d) - topair->second.GetDdistance())+(distance(topair->second.toqpin, q) - topair->second.GetQdistance());
                 if (difference > 0)
                 {
                     displacement += difference;
@@ -249,7 +253,7 @@ int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair, map<str
                 {
                     //cout << it->first << "error";
                 }
-                double difference = (distance(topair->second.todpin, d) - topair->second.GetDdistance());
+                double difference = (distance(topair->second.todpin, d) - topair->second.GetDdistance())+(distance(topair->second.toqpin, q) - topair->second.GetQdistance());
                 if (difference > 0)
                 {
                     displacement += difference;
@@ -257,10 +261,13 @@ int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair, map<str
 
             }
 
-            //cout<<displacement<<endl;
+           // cout<<displacement<<endl;
             double slack = topair->second.Getslack() - displacemaentdelay * displacement - fit->second.Getdelay() + topair->second.getdelay();
+            
             if (slack < 0)
             {
+               // cout<<"slack="<<topair->second.Getslack()<<endl;
+               /// cout<<"delay="<<fit->second.Getdelay()<<endl;
                 totalslackcost -= a * slack;
             }
 
@@ -274,6 +281,8 @@ int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair, map<str
         double nowgain = prevcost - fit->second.Getcost(b, c) - totalslackcost;
         if (nowgain > maxgain)
         {
+            cout<<totalslackcost/a<<endl;
+            totalestslack+=totalslackcost;
             maxgain = nowgain;
             mergeffname = fit->first;
             mergeff = fit->second;
@@ -336,7 +345,7 @@ int main() {
     double num;
 
      infile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\testcase1_0614.txt");
-    // outfile.open("output0614.txt");
+     outfile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\output0614.txt");
    // infile.open();
     
     //sample.txt
@@ -489,6 +498,7 @@ int main() {
         tempinst.Setname(s, type);
         if (!tempinst.Gettype()) { //代表是flip flop
             tempinst.SetFF(FF_lib[s]);
+            tempinst.Setname(s,0);
             oldarea+=FF_lib[s].getarea();
         }
         else { //代表是Gate
@@ -721,6 +731,7 @@ int main() {
         infile >> s;
         infile >> num;
         FF_lib[s].SetQpinDelay(num);
+        FF_lib2[ FF_lib[s].getbit()][s].SetQpinDelay(num);
         infile >> s;
     }
     //"Now" s is TimingSlack
@@ -742,7 +753,7 @@ int main() {
         infile >> s;
         infile >> num;
         FF_lib[s].SetPower(num);
-        
+         FF_lib2[ FF_lib[s].getbit()][s].SetPower(num);
         infile >> s;
     }
     vector<string>new_inst;
@@ -923,8 +934,10 @@ int main() {
             temp_XY=find_the_position(it->Getmember(), FF_lib, placement_check, placementRow, inst_lib, it->GetName(),temp_re);
             ss << "Inst C" << inst_num << " " << it->ffname << " " << temp_XY.x << " " << temp_XY.y;
 
-            cout << "C" << inst_num;
+//            cout << "C" << inst_num;
             inst_lib_new.insert(pair<string, instance>("C"+to_string(inst_num),temp_re));
+            //inst_lib_new["C"+to_string(inst_num)].SetFF(it->flipflop);
+            //outfile<<temp_re.Getlibname()<<endl;
             new_inst.push_back(ss.str());
             newarea+=it->flipflop.getarea();
             newpower+=FF_lib[it->ffname].getpoewer();
@@ -1012,6 +1025,7 @@ int main() {
                         pin_name = s.substr(pos + 1);
                     }
                 Pins d=inst_lib_new[inst_name].GetPins(pin_name);
+                //cout<<"newff="<<inst_lib_new[inst_name].Getlibname()<<endl;
             if((it->second).find("Q")!=string::npos)
             {
                 string s=oldtonew[it->second];   
@@ -1024,11 +1038,17 @@ int main() {
                     }
                 Pins q=inst_lib_new[inst_name].GetPins(pin_name);
                 double dispace=distance(d,q);
+                //cout<<"newff="<<inst_lib_new[inst_name].Getlibname()<<endl;
+             //   cout<<dispace<<"-"<<fromdist[it->first]<<endl;
                 double tmp=inst_lib[it->first].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
+             //    cout<<"tq"<<tmp<<endl;
              //   cout<<inst_lib[it->first].Getdelay()<<inst_lib_new[inst_name].Getdelay();
                 if(tmp<0)
                 {
                     newslack-=tmp;
+                   // cout<<"s"<<inst_lib[it->first].Getslack()<<endl;
+                     //       cout<<"de"<<inst_lib[it->first].Getdelay()<<endl;
+                       //     cout<<"slackq"<< newslack<<endl;
                 }
             }
             else
@@ -1046,12 +1066,18 @@ int main() {
                     {
                         Pins q=Input_pins[it->second];
                         //fromdist.insert(pair<string,double>(it->first,distance(d,q)));
+                 
                         double dispace=distance(d,q);
+               //  cout<<dispace<<"-"<<fromdist[it->first]<<endl;
                         double tmp=inst_lib[it->first].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
                //       cout<<inst_lib[it->first].Getdelay()<<inst_lib_new[inst_name].Getdelay();
+               //         cout<<"ti"<<tmp<<endl;
                         if(tmp<0)
                         {
                             newslack-=tmp;
+                         //   cout<<"s"<<inst_lib[it->first].Getslack()<<endl;
+                          //  cout<<"de"<<FF_lib[[it->first].].Getdelay()<<endl;
+                           // cout<<"slacki"<< newslack<<endl;
                         }
                         continue;
                     }  
@@ -1066,12 +1092,16 @@ int main() {
                     }
                 Pins q=inst_lib_new[inst_name].GetPins(pin_name);
                 double dispace=distance(d,mid)+distance(mid,q);
-                
+                //cout<<dispace<<"-"<<fromdist[it->first]<<endl;
                 double tmp=inst_lib[it->first].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
                 //cout<<inst_lib[it->first].Getdelay()<<inst_lib_new[inst_name].Getdelay();
+                //cout<<"tm"<<tmp<<endl;
                 if(tmp<0)
                 {
                     newslack-=tmp;
+                    //cout<<"s"<<inst_lib[it->first].Getslack()<<endl;
+                           //cout<<"de"<<inst_lib[it->first].Getdelay()<<endl;
+                            //cout<<"slackm"<< newslack<<endl;
                 }
                 
 
@@ -1093,6 +1123,7 @@ int main() {
 
 
     cout<<"oldpower="<<oldpower<<"oldarea="<<oldarea<<"oldslack="<<oldslack<<"newpower="<<newpower<<"newarea="<<newarea<<"newslack="<<newslack<<endl;
+    cout<<"est="<< totalestslack;
     infile.close();
     outfile.close();
     return 0;
