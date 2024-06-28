@@ -575,6 +575,7 @@ int main() {
     }
     for(auto it=frompin.begin();it!=frompin.end();it++)
     {
+       // cout<<it->first<<it->second<<endl;
         if((it->first).find("D")!=string::npos)
         {
             size_t pos = it->first.find('/');
@@ -1022,9 +1023,10 @@ int main() {
                 Pins q=inst_lib_new[inst_name].GetPins(pin_name);
                 double dispace=distance(d,q);
                 double tmp=inst_lib[it->first].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
+             //   cout<<inst_lib[it->first].Getdelay()<<inst_lib_new[inst_name].Getdelay();
                 if(tmp<0)
                 {
-                    newslack+=tmp;
+                    newslack-=tmp;
                 }
             }
             else
@@ -1036,12 +1038,19 @@ int main() {
                     if (pos != string::npos) {
                         inst_name = s.substr(0, pos);
                         pin_name = s.substr(pos + 1);
+                        
                     }
                      else
                     {
                         Pins q=Input_pins[it->second];
-                        fromdist.insert(pair<string,double>(it->first,distance(d,q)));
-
+                        //fromdist.insert(pair<string,double>(it->first,distance(d,q)));
+                        double dispace=distance(d,q);
+                        double tmp=inst_lib[it->first].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
+               //       cout<<inst_lib[it->first].Getdelay()<<inst_lib_new[inst_name].Getdelay();
+                        if(tmp<0)
+                        {
+                            newslack-=tmp;
+                        }
                         continue;
                     }  
                 Pins mid=inst_lib_new[inst_name].GetPins(pin_name);
@@ -1055,10 +1064,12 @@ int main() {
                     }
                 Pins q=inst_lib_new[inst_name].GetPins(pin_name);
                 double dispace=distance(d,mid)+distance(mid,q);
+                
                 double tmp=inst_lib[it->first].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
+                //cout<<inst_lib[it->first].Getdelay()<<inst_lib_new[inst_name].Getdelay();
                 if(tmp<0)
                 {
-                    newslack+=tmp;
+                    newslack-=tmp;
                 }
                 
 
