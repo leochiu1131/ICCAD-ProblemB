@@ -96,9 +96,10 @@ bool BFS(FF after, instance& ok_instance, double**& placement_check, vector<plac
 }
 X_And_Y find_the_position(map<string, pinpair>clique_member, map<string, FF>& FF_lib, double**& placement_check,
     vector<placement>& placementRow, unordered_map<string, instance>& inst_lib, string name,//name代表需要改成的Flip Flop library name
-    instance &temp_re) {
+    instance &temp_re,double DisplacementDelay) {
     vector<string>old_ff;
     vector<instance>Old_FF;
+    double old_slack=0;
     for (auto it = clique_member.begin(); it != clique_member.end(); it++) {
         string s = it->first;
         size_t pos = s.find('/');
@@ -115,6 +116,7 @@ X_And_Y find_the_position(map<string, pinpair>clique_member, map<string, FF>& FF
             }
             if (ok)Old_FF.push_back(inst_lib[inst_name]);
         }
+        old_slack += inst_lib[inst_name].Getslack();
     }
     int average_x = 0, average_y = 0;
     int startX = placementRow[0].startX, startY = placementRow[0].startY;
@@ -152,6 +154,13 @@ X_And_Y find_the_position(map<string, pinpair>clique_member, map<string, FF>& FF
     temp.SetFF(after);
     if (BFS(after, temp, placement_check, placementRow, average_x, average_y, W, H)) {
         temp_re = temp;
+        double sum = 0;
+        for (int i = 0; i < Old_FF.size(); i++) {
+            double temp_x = (Old_FF[i].GetX() - temp.GetX()) * DisplacementDelay; double temp_y = (Old_FF[i].GetY() - temp.GetY()) * DisplacementDelay;
+            sum += temp_x; sum += temp_y;
+        }
+        sum += old_slack; sum += temp.getff().Getdelay();
+        temp_re.SetSlack(sum);
         int temp_x = temp.GetX(); temp_x = (temp_x - startX) / W;
         int temp_y = temp.GetY(); temp_y = (temp_y - startY) / H;
         int temp_x_right = after.getwidth() / W;
@@ -931,7 +940,7 @@ int main() {
             X_And_Y temp_XY;
            
             instance temp_re;
-            temp_XY=find_the_position(it->Getmember(), FF_lib, placement_check, placementRow, inst_lib, it->GetName(),temp_re);
+            temp_XY=find_the_position(it->Getmember(), FF_lib, placement_check, placementRow, inst_lib, it->GetName(),temp_re,DisplacementDelay);
             ss << "Inst C" << inst_num << " " << it->ffname << " " << temp_XY.x << " " << temp_XY.y;
 
 //            cout << "C" << inst_num;
