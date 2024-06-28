@@ -333,7 +333,7 @@ int main() {
     string s;
     double num;
 
-     infile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\sampleCase");
+     infile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\testcase1_0614.txt");
     // outfile.open("output0614.txt");
    // infile.open();
     
@@ -739,7 +739,7 @@ int main() {
         infile >> s;
         infile >> num;
         FF_lib[s].SetPower(num);
-        oldpower+=num;
+        
         infile >> s;
     }
     vector<string>new_inst;
@@ -758,6 +758,7 @@ int main() {
             instance nowinst = inst_lib[nowinstname];
             //cout<<nowinstname<<endl;
             FF nowff = FF_lib[nowinst.Getlibname()];
+            oldpower+=nowff.getpoewer();
             if (nowff.getbit() > 1)
             {
                 for (int k = 0; k < nowff.getbit(); k++)
@@ -923,7 +924,7 @@ int main() {
             inst_lib_new.insert(pair<string, instance>("C"+to_string(inst_num),temp_re));
             new_inst.push_back(ss.str());
             newarea+=it->flipflop.getarea();
-            newpower+=it->flipflop.getpoewer();
+            newpower+=FF_lib[it->ffname].getpoewer();
             vector<string>temp_map_list_one;
             stringstream ss_2;
             if ((*cit).size() > 1)
