@@ -1057,7 +1057,7 @@ int main() {
                 double dispace=distance(d,q);
                 //cout<<"newff="<<inst_lib_new[inst_name].Getlibname()<<endl;
              //   cout<<dispace<<"-"<<fromdist[it->first]<<endl;
-                double tmp=inst_lib[dinst_name].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
+                double tmp=inst_lib[dinst_name].Getslack()-DisplacementDelay*(dispace-fromdist[it->first]);
              //    
              //   cout<<inst_lib[it->first].Getdelay()<<inst_lib_new[inst_name].Getdelay();
                 if(tmp<0)
@@ -1091,13 +1091,13 @@ int main() {
                  
                         double dispace=distance(d,q);
                //  cout<<dispace<<"-"<<fromdist[it->first]<<endl;
-                        double tmp=inst_lib[dinst_name].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
+                        double tmp=inst_lib[dinst_name].Getslack()-DisplacementDelay*(dispace-fromdist[it->first]);
                //       cout<<inst_lib[it->first].Getdelay()<<inst_lib_new[inst_name].Getdelay();
                //         
                         if(tmp<0)
                         {
                           //  cout<<DisplacementDelay*(dispace-fromdist[it->first])<<endl;
-                           // newslack-=tmp;cout<<"ti"<<tmp<<endl;
+                            newslack-=tmp;//cout<<"ti"<<tmp<<endl;
                          //   cout<<dispace<<"-"<<fromdist[it->first]<<endl;
                           //  cout<<"s"<<inst_lib[dinst_name].Getslack()<<endl;
                            // cout<<"de"<<inst_lib[it->first].Getdelay()<<endl;
@@ -1118,7 +1118,7 @@ int main() {
                 Pins q=inst_lib_new[inst_name].GetPins(pin_name);
                 double dispace=distance(d,mid)+distance(mid,q);
                 //cout<<dispace<<"-"<<fromdist[it->first]<<endl;
-                double tmp=inst_lib[dinst_name].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
+                double tmp=inst_lib[dinst_name].Getslack()-DisplacementDelay*(dispace-fromdist[it->first]);
                 //cout<<inst_lib[it->first].Getdelay()<<inst_lib_new[inst_name].Getdelay();
                 //
                 if(tmp<0)
