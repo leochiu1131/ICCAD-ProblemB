@@ -94,8 +94,8 @@ bool BFS(FF after, instance& ok_instance, double**& placement_check, vector<plac
     return false;
 }
 X_And_Y find_the_position(map<string, pinpair>clique_member, map<string, FF>& FF_lib, double**& placement_check,
-    vector<placement>& placementRow, unordered_map<string, instance>& inst_lib, string name //name代表需要改成的Flip Flop library name
-) {
+    vector<placement>& placementRow, unordered_map<string, instance>& inst_lib, string name,//name代表需要改成的Flip Flop library name
+    instance &temp_re) {
     vector<string>old_ff;
     vector<instance>Old_FF;
     for (auto it = clique_member.begin(); it != clique_member.end(); it++) {
@@ -149,8 +149,8 @@ X_And_Y find_the_position(map<string, pinpair>clique_member, map<string, FF>& FF
     bool ok = 0;
     instance temp;
     temp.SetFF(after);
-
     if (BFS(after, temp, placement_check, placementRow, average_x, average_y, W, H)) {
+        temp_re = temp;
         int temp_x = temp.GetX(); temp_x = (temp_x - startX) / W;
         int temp_y = temp.GetY(); temp_y = (temp_y - startY) / H;
         int temp_x_right = after.getwidth() / W;
@@ -171,7 +171,9 @@ X_And_Y find_the_position(map<string, pinpair>clique_member, map<string, FF>& FF
         return re;
     }
     else {
-        X_And_Y re; re.x=0; re.y=0;
+        cout << "can't" << endl;
+        X_And_Y re;
+        re.x = 0; re.y = 0;
         return re;
     }
 }
@@ -918,7 +920,7 @@ int main() {
             X_And_Y temp_XY;
            
             instance temp_re;
-            temp_XY=find_the_position(it->Getmember(), FF_lib, placement_check, placementRow, inst_lib, it->GetName());
+            temp_XY=find_the_position(it->Getmember(), FF_lib, placement_check, placementRow, inst_lib, it->GetName(),temp_re);
             ss << "Inst C" << inst_num << " " << it->ffname << " " << temp_XY.x << " " << temp_XY.y;
 
             cout << "C" << inst_num;
