@@ -219,10 +219,10 @@ int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair, map<str
         double totalslackcost = 0;
         // cout<<fit->first<<endl;
         map<string, int> corespond = set_corespond_pin(nowclique, totest_Pinpair, fit->second);
-
+        double displacement = 0;
         for (auto it = corespond.begin(); it != corespond.end(); it++)
         {
-            double displacement = 0;
+            
             // cout<<it->first<<"ss"<<endl;
             Pins d = fit->second.qdpinpair.at(it->second).first;
             d.addX(center.getx() - (fit->second.getwidth() / 2));
