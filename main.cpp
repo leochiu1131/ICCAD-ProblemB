@@ -1025,6 +1025,14 @@ int main() {
         double newdist=0;
         if((it->first).find("D")!=string::npos)
         {
+            
+             size_t dpos = it->first.find('/');
+                    string dinst_name;
+                    string dpin_name;
+                    if (dpos != string::npos) {
+                        dinst_name =  it->first.substr(0, dpos);
+                        dpin_name =  it->first.substr(dpos + 1);
+                    }
             string s=oldtonew[it->first];
             size_t pos = s.find('/');
                     string inst_name;
@@ -1049,14 +1057,19 @@ int main() {
                 double dispace=distance(d,q);
                 //cout<<"newff="<<inst_lib_new[inst_name].Getlibname()<<endl;
              //   cout<<dispace<<"-"<<fromdist[it->first]<<endl;
-                double tmp=inst_lib[it->first].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
-             //    cout<<"tq"<<tmp<<endl;
+                double tmp=inst_lib[dinst_name].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
+             //    
              //   cout<<inst_lib[it->first].Getdelay()<<inst_lib_new[inst_name].Getdelay();
                 if(tmp<0)
                 {
                     newslack-=tmp;
-                   // cout<<"s"<<inst_lib[it->first].Getslack()<<endl;
+                   // cout<<dispace<<"-"<<fromdist[it->first]<<endl;
+                  //  cout<<"s"<<inst_lib[dinst_name].Getslack()<<endl;
+                   // cout<<DisplacementDelay*(dispace-fromdist[it->first])<<endl;
+             //    
+                 //   cout<<"tq"<<tmp<<endl;        
                      //       cout<<"de"<<inst_lib[it->first].Getdelay()<<endl;
+                   //         cout<<"de2"<<inst_lib_new[inst_name].Getdelay()<<endl;
                        //     cout<<"slackq"<< newslack<<endl;
                 }
             }
@@ -1078,14 +1091,17 @@ int main() {
                  
                         double dispace=distance(d,q);
                //  cout<<dispace<<"-"<<fromdist[it->first]<<endl;
-                        double tmp=inst_lib[it->first].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
+                        double tmp=inst_lib[dinst_name].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
                //       cout<<inst_lib[it->first].Getdelay()<<inst_lib_new[inst_name].Getdelay();
-               //         cout<<"ti"<<tmp<<endl;
+               //         
                         if(tmp<0)
                         {
-                            newslack-=tmp;
-                         //   cout<<"s"<<inst_lib[it->first].Getslack()<<endl;
-                          //  cout<<"de"<<FF_lib[[it->first].].Getdelay()<<endl;
+                          //  cout<<DisplacementDelay*(dispace-fromdist[it->first])<<endl;
+                           // newslack-=tmp;cout<<"ti"<<tmp<<endl;
+                         //   cout<<dispace<<"-"<<fromdist[it->first]<<endl;
+                          //  cout<<"s"<<inst_lib[dinst_name].Getslack()<<endl;
+                           // cout<<"de"<<inst_lib[it->first].Getdelay()<<endl;
+                           //cout<<"de2"<<inst_lib_new[inst_name].Getdelay()<<endl;
                            // cout<<"slacki"<< newslack<<endl;
                         }
                         continue;
@@ -1102,15 +1118,19 @@ int main() {
                 Pins q=inst_lib_new[inst_name].GetPins(pin_name);
                 double dispace=distance(d,mid)+distance(mid,q);
                 //cout<<dispace<<"-"<<fromdist[it->first]<<endl;
-                double tmp=inst_lib[it->first].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
+                double tmp=inst_lib[dinst_name].Getslack()+inst_lib[it->first].Getdelay()-inst_lib_new[inst_name].Getdelay()-DisplacementDelay*(dispace-fromdist[it->first]);
                 //cout<<inst_lib[it->first].Getdelay()<<inst_lib_new[inst_name].Getdelay();
-                //cout<<"tm"<<tmp<<endl;
+                //
                 if(tmp<0)
                 {
                     newslack-=tmp;
-                    //cout<<"s"<<inst_lib[it->first].Getslack()<<endl;
-                           //cout<<"de"<<inst_lib[it->first].Getdelay()<<endl;
-                            //cout<<"slackm"<< newslack<<endl;
+                    cout<<dispace<<"-"<<fromdist[it->first]<<endl;
+                    cout<<"tm"<<tmp<<endl;
+                    cout<<DisplacementDelay*(dispace-fromdist[it->first])<<endl;
+                    cout<<"s"<<inst_lib[dinst_name].Getslack()<<endl;
+                    cout<<"de"<<inst_lib[it->first].Getdelay()<<endl;
+                    cout<<"de2"<<inst_lib_new[inst_name].Getdelay()<<endl;
+                    cout<<"slackm"<< newslack<<endl;
                 }
                 
 
