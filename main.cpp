@@ -317,7 +317,7 @@ int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair, map<str
 
 }
 
-int main() {
+int main(int argc,char* argv[]) {
     double Alpha, Beta, Gamma, Lambda;
 
     double Die_LLeftX, Die_LLeftY, Die_URightX, Die_URightY;
@@ -353,8 +353,8 @@ int main() {
     string s;
     double num;
 
-     infile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\testcase1_0614.txt");
-     outfile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\output0614.txt");
+     infile.open(argv[1]);
+     outfile.open(argv[2]);
    // infile.open();
     
     //sample.txt

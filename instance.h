@@ -5,7 +5,7 @@ using namespace std;
 #include <map>
 #include "pin.h"
 #include "ff.h"
-#include "Gate.h"
+#include "gate.h"
 using namespace std;
 
 class instance{

@@ -15,5 +15,8 @@
         "xtree": "cpp",
         "xutility": "cpp"
     },
-    "C_Cpp.errorSquiggles": "disabled"
+    "C_Cpp.errorSquiggles": "disabled",
+    "makefile.makefilePath": "C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\Makefile",
+    "makefile.makePath": "C:\\MinGW\\bin\\mingw32-make.exe",
+    "makefile.extensionOutputFolder": "./.vscode"
 }
