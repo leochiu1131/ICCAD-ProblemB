@@ -7,13 +7,14 @@
 #include <queue>
 #include <sstream>
 #include <iomanip>
+#include <set>
+#include<cfloat>
 #include "pin.h"
 #include "ff.h"
 #include "gate.h"
 #include "net.h"
 #include "instance.h"
-#include "estimate.cpp"
-#include<cfloat>
+#include "clique.h"
 using namespace std;
 double totalestslack=0;
 struct X_And_Y {
@@ -29,6 +30,234 @@ struct placement {
     double siteHeight;
     int NumofSite;
 };
+
+
+
+
+ string find_nearst_pinpair_outof_clique(map<string,pinpair>& topin,clique&nowclique,map<string,pinpair>& to_test)
+    {
+        double mindistance=DBL_MAX;
+        string nearstpair;
+        Pins d;
+        Pins q;
+        d.SetX(nowclique.aver_d_x);
+        d.SetY(nowclique.aver_d_y);
+        q.SetX(nowclique.aver_q_x);
+        q.SetY(nowclique.aver_q_y);
+
+        for(auto it=topin.begin();it!=topin.end();it++)
+        {
+            auto vit=nowclique.clique_member.find(it->first);
+            auto tit=to_test.find(it->first);
+            if(vit==nowclique.clique_member.end()&&tit==to_test.end())
+            {
+                double nowdistance=distance(it->second.todpin,d)+distance(it->second.toqpin,q);
+                if(nowdistance<mindistance)
+                {
+                    mindistance=nowdistance;
+                    nearstpair=it->first;
+                }
+            }
+
+        }
+        return nearstpair;
+
+    }
+    
+    
+    /*
+    string find_nearst_pinpair(map<string,pinpair>& topin,clique&nowclique)
+    {
+        double mindistance=DBL_MAX;
+        string nearstpair;
+        Pins d;
+        Pins q;
+        d.SetX(nowclique.aver_d_x);
+        d.SetY(nowclique.aver_d_y);
+        q.SetX(nowclique.aver_q_x);
+        q.SetY(nowclique.aver_q_y);
+        for(auto it=topin.begin();it!=topin.end();it++)
+        {
+        
+            {
+                double nowdistance=distance(it->second.todpin,d)+distance(it->second.toqpin,q);
+                if(nowdistance<mindistance)
+                {
+                    mindistance=nowdistance;
+                    nearstpair=it->first;
+                }
+            }
+
+        }
+        return nearstpair;
+
+    }
+    */
+string find_nearst_pinpair(map<string,pinpair>& topin,Pins& d,Pins&q)
+    {
+        double mindistance=DBL_MAX;
+        string nearstpair=" ";
+        
+        for(auto it=topin.begin();it!=topin.end();it++)
+        {
+        
+                double nowdistance=distance(it->second.todpin,d)+distance(it->second.toqpin,q);
+                if(nowdistance<mindistance&&nowdistance!=0)
+                {
+                    mindistance=nowdistance;
+                    nearstpair=it->first;
+                }
+            
+
+        }
+        return nearstpair;
+
+}
+map<string,int> set_corespond_pin(clique& nowclique,map<string,pinpair>& totest_Pinpair,FF& flipflop)
+{
+    double h=flipflop.getheight();
+    double w=flipflop.getwidth();
+    double up=nowclique.up;
+    double down=nowclique.down;
+    double left=nowclique.left;
+    double right=nowclique.right;
+
+    map<string,int> corespond;
+    //cout<<"uu";
+    map<string,pinpair> tobematch=nowclique.clique_member;
+    //cout<<"l"<<left<<"r"<<right<<"u"<<up<<"d"<<down<<endl;
+    for(auto it=totest_Pinpair.begin();it!=totest_Pinpair.end();it++)
+    {
+        tobematch.insert(pair<string,pinpair>(it->first,it->second));
+    }
+    for(auto it=totest_Pinpair.begin();it!=totest_Pinpair.end();it++)
+    {
+           if(it->second.toqpin.getx()>right)
+            {
+                right=it->second.toqpin.getx();
+            }
+             if(it->second.todpin.getx()>right)
+            {
+                right=it->second.todpin.getx();
+            }
+             if(it->second.toqpin.getx()<left)
+            {
+                left=it->second.toqpin.getx();
+            }
+             if(it->second.todpin.getx()<left)
+            {
+                left=it->second.todpin.getx();
+            }
+             if(it->second.toqpin.gety()>up)
+            {
+                up=it->second.toqpin.gety();
+            }
+            if(it->second.todpin.gety()>up)
+            {
+                up=it->second.todpin.gety();
+            }
+              if(it->second.toqpin.gety()<down)
+            {
+                down=it->second.toqpin.gety();
+            }
+            if(it->second.todpin.gety()<down)
+            {
+                down=it->second.todpin.gety();
+            }
+    }
+    //cout<<"l"<<left<<"r"<<right<<"u"<<up<<"d"<<down<<endl;
+    //cout<<"qdsize"<<flipflop.qdpinpair.size()<<endl;
+    for(int k=0;k<flipflop.qdpinpair.size();k++)
+    {
+        Pins d=flipflop.qdpinpair[k].first;
+        Pins q=flipflop.qdpinpair[k].second;
+        double dx=d.getx()/flipflop.getwidth();
+        double dy=d.gety()/flipflop.getheight();
+        double qx=q.getx()/flipflop.getwidth();
+         double qy=q.gety()/flipflop.getheight();
+        //cout<<dx<<" ,"<<dy<<qx<<" ,"<<qy<<endl;
+        double min=100;
+        string corepinpair;
+        for(auto it=tobematch.begin();it!=tobematch.end();it++)
+        {
+
+        Pins td=it->second.todpin;    
+        Pins tq=it->second.toqpin;
+            
+        double tdx=(td.getx()-left)/right;
+        double tdy=(td.gety()-down)/up;
+        double tqx=(tq.getx()-left)/right;
+         double tqy=(tq.gety()-down)/up;
+       // cout<<it->first<<"c "<<" "<<tdx<<" ,"<<tdy<<" "<<tqx<<" ,"<<tqy<<endl;
+        double core_num=(absd(tdx-dx)+absd(tdy-dy))+absd(tqy-qy)+absd(tqx-qx);
+        if(core_num<min&&corespond.find(it->first)==corespond.end())
+            {
+                min=core_num;
+                corepinpair=it->first;
+            }
+
+        }
+       
+       // cout<<corepinpair<<"cpin"<<endl;
+        corespond.insert(pair<string,int>(corepinpair,k));
+      // cout<<corepinpair<<"core"<<k<<endl;
+    }
+    return  corespond;
+
+
+}
+map<string,int> set_corespond_pin(clique& nowclique,FF& flipflop)
+{
+    double h=flipflop.getheight();
+    double w=flipflop.getwidth();
+    double up=nowclique.up;
+    double down=nowclique.down;
+    double left=nowclique.left;
+    double right=nowclique.right;
+    map<string,int> corespond;
+    map<string,pinpair> tobematch=nowclique.clique_member;
+    //cout<<"l"<<left<<"r"<<right<<"u"<<up<<"d"<<down<<endl;
+    
+    for(int k=0;k<flipflop.qdpinpair.size();k++)
+    {
+        Pins d=flipflop.qdpinpair[k].first;
+        Pins q=flipflop.qdpinpair[k].second;
+        double dx=d.getx()/flipflop.getwidth();
+        double dy=d.gety()/flipflop.getheight();
+        double qx=q.getx()/flipflop.getwidth();
+         double qy=q.gety()/flipflop.getheight();
+      //  cout<<dx<<" ,"<<dy<<qx<<" ,"<<qy<<endl;
+        double min=4;
+        string corepinpair;
+        for(auto it=tobematch.begin();it!=tobematch.end();it++)
+        {
+
+        Pins td=it->second.todpin;    
+        Pins tq=it->second.toqpin;
+            
+        double tdx=(td.getx()-left)/right;
+        double tdy=(td.gety()-down)/up;
+        double tqx=(tq.getx()-left)/right;
+         double tqy=(tq.gety()-down)/up;
+      //  cout<<it->first<<"c "<<" "<<tdx<<" ,"<<tdy<<" "<<tqx<<" ,"<<tqy<<endl;
+        double core_num=(absd(tdx-dx)+absd(tdy-dy))+absd(tqy-qy)+absd(tqx-qx);
+        if(core_num<min&&corespond.find(it->first)==corespond.end())
+            {
+                min=core_num;
+                corepinpair=it->first;
+            }
+
+        }
+       
+
+        corespond.insert(pair<string,int>(corepinpair,k));
+      // cout<<corepinpair<<"core"<<k<<endl;
+    }
+    return  corespond;
+
+
+}
+
 bool position_check(FF after, double**& placement_check, vector<placement>& placementRow,
     int after_x, int after_y, int W, int H) {
     int startX = placementRow[0].startX, startY = placementRow[0].startY;
@@ -196,7 +425,7 @@ double compute_area(double**& placement_check, int x, int y) {
     }
     return area;
 }
-int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair, map<string, FF>& FF_lib2, double a, double b, double c, double displacemaentdelay)
+int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair,map<string, FF>& FF_lib, map<string, FF>& FF_lib2, double a, double b, double c, double displacemaentdelay)
 {
 
     bool success = 0;
@@ -223,11 +452,11 @@ int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair, map<str
      //cout<<FF_lib2.size()<<"ss";
      //cout<<nowclique.flipflop.getarea()<<endl;
     double prevcost = nowclique.flipflop.Getcostperbit(b, c) * (nowclique.clique_member.size() + totest_Pinpair.size());
-    //cout<<"prevcost="<<prevcost<<endl;
+    //cout<<"prevcost="<<nowclique.flipflop.Getcost(b,c)<<endl;
     for (auto fit = FF_lib2.begin(); fit != FF_lib2.end(); fit++)
     {
         double nowffcost = fit->second.Getcost(b, c);
-        //cout<<"nowcost="<<nowffcost<<endl;
+       // cout<<"nowcost="<<nowffcost<<endl;
         double totalslackcost = 0;
         // cout<<fit->first<<endl;
         map<string, int> corespond = set_corespond_pin(nowclique, totest_Pinpair, fit->second);
@@ -246,7 +475,8 @@ int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair, map<str
             auto topair = nowclique.clique_member.find(it->first);
             if (topair != nowclique.clique_member.end())
             {
-
+                //cout<<topair->second.todpin.getx()<<","<<topair->second.todpin.gety()<<endl;
+               // cout<<topair->second.toqpin.getx()<<","<<topair->second.toqpin.gety()<<endl;
                 double difference = (distance(topair->second.todpin, d) - topair->second.GetDdistance())+(distance(topair->second.toqpin, q) - topair->second.GetQdistance());
                 if (difference > 0)
                 {
@@ -271,8 +501,10 @@ int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair, map<str
             }
 
            // cout<<displacement<<endl;
-            double slack = topair->second.Getslack() - displacemaentdelay * displacement - fit->second.Getdelay() + topair->second.getdelay();
-            
+            double slack = topair->second.Getslack() - displacemaentdelay * displacement - fit->second.Getdelay() + FF_lib[topair->second.getoldffname()].Getdelay();
+          //  cout<<topair->second.getoldffname()<<endl;
+           // cout<<FF_lib[topair->second.getoldffname()].Getdelay()<<endl;
+            //cout<<fit->second.Getdelay()<<endl;
             if (slack < 0)
             {
                // cout<<"slack="<<topair->second.Getslack()<<endl;
@@ -290,7 +522,7 @@ int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair, map<str
         double nowgain = prevcost - fit->second.Getcost(b, c) - totalslackcost;
         if (nowgain > maxgain)
         {
-            cout<<totalslackcost/a<<endl;
+            //cout<<totalslackcost/a<<endl;
             totalestslack+=totalslackcost;
             maxgain = nowgain;
             mergeffname = fit->first;
@@ -317,7 +549,7 @@ int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair, map<str
 
 }
 
-int main(int argc,char* argv[]) {
+int main(int argc, char** argv) {
     double Alpha, Beta, Gamma, Lambda;
 
     double Die_LLeftX, Die_LLeftY, Die_URightX, Die_URightY;
@@ -352,9 +584,11 @@ int main(int argc,char* argv[]) {
 
     string s;
     double num;
+    infile.open(argv[1]);
+    outfile.open(argv[2]);
 
-     infile.open(argv[1]);
-     outfile.open(argv[2]);
+     //infile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\testcase1_0614.txt");
+    // outfile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\output0614.txt");
    // infile.open();
     
     //sample.txt
@@ -521,7 +755,7 @@ int main(int argc,char* argv[]) {
         inst_lib.insert(pair<string, instance>(instName, tempinst));
 
     }
-    map<string,string> frompin;
+    map<string,string> frompin;//second街道first ex:(reg1/d,in) 
     map<string,double> fromdist;
 
     vector<vector<string>>FF_same_CLK;     //找出有相同clk signal的FF
@@ -740,7 +974,7 @@ int main(int argc,char* argv[]) {
         infile >> s;
         infile >> num;
         FF_lib[s].SetQpinDelay(num);
-        FF_lib2[ FF_lib[s].getbit()][s].SetQpinDelay(num);
+        FF_lib2[FF_lib[s].getbit()][s].SetQpinDelay(num);
         infile >> s;
     }
     //"Now" s is TimingSlack
@@ -790,7 +1024,7 @@ int main(int argc,char* argv[]) {
                     string pinindex = to_string(k);
                     Pins temptoD = nowinst.todpin["D" + pinindex];
                     Pins temptoQ = nowinst.toqpin["Q" + pinindex];
-                    pinpair temppinpair(temptoD, temptoQ, nowinst, pinindex);
+                    pinpair temppinpair(temptoD, temptoQ, nowinst, pinindex,nowinstname);
                     //cout<<temptoQ.getx()<<"toq,"<<temptoQ.gety()<<endl;
                     //cout<<temptoD.getx()<<"tod,"<<temptoD.gety()<<endl;
                     topin.insert(pair<string, pinpair>(nowinstname + "/" + to_string(k), temppinpair));
@@ -802,7 +1036,7 @@ int main(int argc,char* argv[]) {
                 Pins temptoD = nowinst.todpin["D"];
                 Pins temptoQ = nowinst.toqpin["Q"];
                 string pinindex = to_string(0);
-                pinpair temppinpair(temptoD, temptoQ, nowinst, pinindex);
+                pinpair temppinpair(temptoD, temptoQ, nowinst, pinindex,nowinstname);
                 //cout<<temptoQ.getx()<<"toq,"<<temptoQ.gety()<<endl;
                // cout<<temptoD.getx()<<"tod,"<<temptoD.gety()<<endl;
                 topin.insert(pair<string, pinpair>(nowinstname + "/", temppinpair));
@@ -896,7 +1130,7 @@ int main(int argc,char* argv[]) {
                         break;
                     }
                     //cout << pincount << endl;
-                    success = clique_test(tempclique, to_test, FF_lib2[pincount], Alpha, Beta, Gamma, DisplacementDelay);
+                    success = clique_test(tempclique, to_test,  FF_lib,FF_lib2[pincount], Alpha, Beta, Gamma, DisplacementDelay);
                     //cout << "soccess=" << success << endl;
                     if (success == 1)
                     {
@@ -938,13 +1172,17 @@ int main(int argc,char* argv[]) {
             stringstream ss;
             string temp_inst;
             X_And_Y temp_XY;
-           
+           //cout<<it->ffname<<endl;
             instance temp_re;
+            
             temp_XY=find_the_position(it->Getmember(), FF_lib, placement_check, placementRow, inst_lib, it->GetName(),temp_re,DisplacementDelay);
             ss << "Inst C" << inst_num << " " << it->ffname << " " << temp_XY.x << " " << temp_XY.y;
 
 //            cout << "C" << inst_num;
+            temp_re.Setlibname(it->ffname);
+           // cout<<"ss"<<temp_re.Getlibname()<<endl;
             inst_lib_new.insert(pair<string, instance>("C"+to_string(inst_num),temp_re));
+           // cout<<inst_lib_new["C"+to_string(inst_num)].Getlibname()<<"tt"<<endl;
             //inst_lib_new["C"+to_string(inst_num)].SetFF(it->flipflop);
             //outfile<<temp_re.Getlibname()<<endl;
             new_inst.push_back(ss.str());
@@ -1003,7 +1241,7 @@ int main(int argc,char* argv[]) {
                     ss_2.str(""); //ss_2.clear();
 
                     ss_2 << inst_name << "/" << "Q" << pin_name << " map " << "C" << inst_num << "/Q";
-                    oldtonew.insert(pair<string,string>(inst_name + "/" + "Q" ,"C" +to_string(inst_num )  + "Q" ));
+                    oldtonew.insert(pair<string,string>(inst_name + "/" + "Q" ,"C" +to_string(inst_num )  + "/Q" ));
                     temp_map_list_one.push_back(ss_2.str());
                     ss_2.str("");//ss_2.clear();
 
@@ -1018,12 +1256,19 @@ int main(int argc,char* argv[]) {
             //cout << endl;
 
         }
+    }/*
+    for(auto it=oldtonew.begin();it!=oldtonew.end();it++)
+    {
+        cout<<it->first<<"t0"<<it->second<<endl;
     }
+    */
     for(auto it=frompin.begin();it!=frompin.end();it++)
     
+
     {
+        //cout<<it->first<<"xx"<<it->second<<endl;
         double newdist=0;
-        if((it->first).find("D")!=string::npos)
+        if((it->first).find("D")!=string::npos)//所有D PIN
         {
             
              size_t dpos = it->first.find('/');
@@ -1034,18 +1279,20 @@ int main(int argc,char* argv[]) {
                         dpin_name =  it->first.substr(dpos + 1);
                     }
             string s=oldtonew[it->first];
+             //cout<<s<<endl;
             size_t pos = s.find('/');
-                    string inst_name;
+                    string ndinst_name;
                     string pin_name;
                     if (pos != string::npos) {
-                        inst_name = s.substr(0, pos);
+                        ndinst_name = s.substr(0, pos);
                         pin_name = s.substr(pos + 1);
                     }
-                Pins d=inst_lib_new[inst_name].GetPins(pin_name);
+                Pins d=inst_lib_new[ndinst_name].GetPins(pin_name);
                 //cout<<"newff="<<inst_lib_new[inst_name].Getlibname()<<endl;
             if((it->second).find("Q")!=string::npos)
             {
                 string s=oldtonew[it->second];   
+               // cout<<s<<endl;
                 size_t pos = s.find('/');
                     string inst_name;
                     string pin_name;
@@ -1055,11 +1302,20 @@ int main(int argc,char* argv[]) {
                     }
                 Pins q=inst_lib_new[inst_name].GetPins(pin_name);
                 double dispace=distance(d,q);
+              //  cout<<d.getx()<<","<<d.gety()<<endl;
+              //  cout<<q.getx()<<","<<q.gety()<<endl;
+
                 //cout<<"newff="<<inst_lib_new[inst_name].Getlibname()<<endl;
-             //   cout<<dispace<<"-"<<fromdist[it->first]<<endl;
-                double tmp=inst_lib[dinst_name].Getslack()-DisplacementDelay*(dispace-fromdist[it->first]);
+               // cout<<dispace<<"-"<<fromdist[it->first]<<endl;
+                double tmp=inst_lib[dinst_name].Getslack()-DisplacementDelay*(dispace-fromdist[it->first])+FF_lib[inst_lib[dinst_name].Getlibname()].Getdelay()-FF_lib[inst_lib_new[ndinst_name].Getlibname()].Getdelay();
              //    
-             //   cout<<inst_lib[it->first].Getdelay()<<inst_lib_new[inst_name].Getdelay();
+               // cout<<dinst_name<<ndinst_name<<endl;
+                if(inst_lib_new.find(ndinst_name)==inst_lib_new.end())
+                {
+                    cout<<"not"<<endl;
+                }
+                // cout<<inst_lib[dinst_name].Getlibname()<<inst_lib_new[ndinst_name].Getlibname()<<endl;
+               // cout<<FF_lib[inst_lib[dinst_name].Getlibname()].Getdelay()<<FF_lib[inst_lib_new[ndinst_name].Getlibname()].Getdelay()<<endl;
                 if(tmp<0)
                 {
                     newslack-=tmp;
@@ -1086,14 +1342,21 @@ int main(int argc,char* argv[]) {
                     }
                      else
                     {
+                        //frompin.second為IN
                         Pins q=Input_pins[it->second];
                         //fromdist.insert(pair<string,double>(it->first,distance(d,q)));
                  
                         double dispace=distance(d,q);
-               //  cout<<dispace<<"-"<<fromdist[it->first]<<endl;
-                        double tmp=inst_lib[dinst_name].Getslack()-DisplacementDelay*(dispace-fromdist[it->first]);
+                      //  cout<<dispace<<"-"<<fromdist[it->first]<<endl;
+                        double tmp=inst_lib[dinst_name].Getslack()-DisplacementDelay*(dispace-fromdist[it->first])+FF_lib[inst_lib[dinst_name].Getlibname()].Getdelay()-FF_lib[inst_lib_new[ndinst_name].Getlibname()].Getdelay();
                //       cout<<inst_lib[it->first].Getdelay()<<inst_lib_new[inst_name].Getdelay();
-               //         
+                    //cout<<dinst_name<<ndinst_name<<endl;
+                     if(inst_lib_new.find(ndinst_name)==inst_lib_new.end())
+                {
+                    cout<<"not"<<endl;
+                }
+                  //  cout<<inst_lib[dinst_name].Getlibname()<<inst_lib_new[ndinst_name].Getlibname()<<endl;
+                  //  cout<<FF_lib[inst_lib[dinst_name].Getlibname()].Getdelay()<<FF_lib[inst_lib_new[ndinst_name].Getlibname()].Getdelay()<<endl;
                         if(tmp<0)
                         {
                           //  cout<<DisplacementDelay*(dispace-fromdist[it->first])<<endl;
@@ -1118,19 +1381,26 @@ int main(int argc,char* argv[]) {
                 Pins q=inst_lib_new[inst_name].GetPins(pin_name);
                 double dispace=distance(d,mid)+distance(mid,q);
                 //cout<<dispace<<"-"<<fromdist[it->first]<<endl;
-                double tmp=inst_lib[dinst_name].Getslack()-DisplacementDelay*(dispace-fromdist[it->first]);
+                double tmp=inst_lib[dinst_name].Getslack()-DisplacementDelay*(dispace-fromdist[it->first])+FF_lib[inst_lib[dinst_name].Getlibname()].Getdelay()-FF_lib[inst_lib_new[ndinst_name].Getlibname()].Getdelay();
                 //cout<<inst_lib[it->first].Getdelay()<<inst_lib_new[inst_name].Getdelay();
+              //  cout<<dinst_name<<ndinst_name<<endl;
+                  if(inst_lib_new.find(ndinst_name)==inst_lib_new.end())
+                {
+                    cout<<"not"<<endl;
+                }
+              //   cout<<inst_lib[dinst_name].Getlibname()<<inst_lib_new[ndinst_name].Getlibname()<<endl;
+              //  cout<<FF_lib[inst_lib[dinst_name].Getlibname()].Getdelay()<<FF_lib[inst_lib_new[ndinst_name].Getlibname()].Getdelay()<<endl;
                 //
                 if(tmp<0)
                 {
                     newslack-=tmp;
-                    cout<<dispace<<"-"<<fromdist[it->first]<<endl;
-                    cout<<"tm"<<tmp<<endl;
-                    cout<<DisplacementDelay*(dispace-fromdist[it->first])<<endl;
-                    cout<<"s"<<inst_lib[dinst_name].Getslack()<<endl;
-                    cout<<"de"<<inst_lib[it->first].Getdelay()<<endl;
-                    cout<<"de2"<<inst_lib_new[inst_name].Getdelay()<<endl;
-                    cout<<"slackm"<< newslack<<endl;
+                    //cout<<dispace<<"-"<<fromdist[it->first]<<endl;
+                  //  cout<<"tm"<<tmp<<endl;
+                   // cout<<DisplacementDelay*(dispace-fromdist[it->first])<<endl;
+                   // cout<<"s"<<inst_lib[dinst_name].Getslack()<<endl;
+                   // cout<<"de"<<inst_lib[it->first].Getdelay()<<endl;
+                    //cout<<"de2"<<inst_lib_new[inst_name].Getdelay()<<endl;
+                    //cout<<"slackm"<< newslack<<endl;
                 }
                 
 

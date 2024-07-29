@@ -1,6 +1,5 @@
-C:\MinGW\bin\mingw32-make.exe all -f C:\Users\Yeh\Desktop\class\eda\Fp\ICCAD-ProblemB\Makefile -C /usr/bin/make --dry-run --keep-going --print-directory
+C:\MinGW\bin\mingw32-make.exe all -f C:\Users\Yeh\Desktop\class\eda\Fp\ICCAD-ProblemB\Makefile -C /usr/bin/make --dry-run --always-make --keep-going --print-directory
 mingw32-make: Entering an unknown directory
- 
 mingw32-make: Leaving an unknown directory
  
 mingw32-make: *** /usr/bin/make: No such file or directory.  Stop.

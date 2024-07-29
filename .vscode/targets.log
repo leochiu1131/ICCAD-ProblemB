@@ -5,9 +5,8 @@ C:\MinGW\bin\mingw32-make.exe all -f C:\Users\Yeh\Desktop\class\eda\Fp\ICCAD-Pro
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
- 
 
-# Make data base, printed on Mon Jul 22 11:30:50 2024
+# Make data base, printed on Wed Jul 24 17:18:54 2024
 
 # Variables
 
@@ -20,12 +19,11 @@ HOMEDRIVE = C:
 # environment
 WINDIR = C:\WINDOWS
 # environment
-VSCODE_NLS_CONFIG = {"locale":"zh-tw","osLocale":"zh-tw","availableLanguages":{"*":"zh-tw"},"_languagePackId":"4cccd27485610a4dcf5ebd602e3f5c23.zh-tw","_translationsConfigFile":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\4cccd27485610a4dcf5ebd602e3f5c23.zh-tw\\tcf.json","_cacheRoot":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\4cccd27485610a4dcf5ebd602e3f5c23.zh-tw","_resolvedLanguagePackCoreLocation":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\4cccd27485610a4dcf5ebd602e3f5c23.zh-tw\\5437499feb04f7a586f677b155b039bc2b3669eb","_corruptedFile":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\4cccd27485610a4dcf5ebd602e3f5c23.zh-tw\\corrupted.info","_languagePackSupport":true}
+VSCODE_NLS_CONFIG = {"locale":"zh-tw","osLocale":"zh-tw","availableLanguages":{"*":"zh-tw"},"_languagePackId":"05db1f40aabd63c588707801b11a4a0a.zh-tw","_translationsConfigFile":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\05db1f40aabd63c588707801b11a4a0a.zh-tw\\tcf.json","_cacheRoot":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\05db1f40aabd63c588707801b11a4a0a.zh-tw","_resolvedLanguagePackCoreLocation":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\05db1f40aabd63c588707801b11a4a0a.zh-tw\\f1e16e1e6214d7c44d078b1f0607b2388f29d729","_corruptedFile":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\05db1f40aabd63c588707801b11a4a0a.zh-tw\\corrupted.info","_languagePackSupport":true}
 # environment
 ONEDRIVE = C:\Users\Yeh\OneDrive
 # environment
-PATHEXT = .CO 
-M;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+PATHEXT = .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
 # environment
 TMP = C:\Users\Yeh\AppData\Local\Temp
 # environment
@@ -33,9 +31,9 @@ PROGRAMW6432 = C:\Program Files
 # environment
 PROGRAMDATA = C:\ProgramData
 # environment
-VSCODE_CWD = C:\Users\Yeh\AppData\Local\Programs\Microsoft VS Code
+VSCODE_CWD = C:\Users\Yeh\Desktop\class\eda\Fp\ICCAD-ProblemB
 # environment
-PATH = C:\Program Files (x86)\VMware\VMware Player\bin\;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\libnvvp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\libnvvp;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Users\Yeh\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;C:\Program Files\NVIDIA Corporation\Nsight Compute 2019.5.0\;C:\_research\enviroment\opencv\build\x64\vc14\bin;C:\_research\enviroment\opencv\build\x64\vc14\lib;C:\_research\openpose-1.5.1\.build\bin;C:\_research\darknet-master\darknet-darknet_yolo_v3\darknet-darknet_yolo_v3\build\openposeDemo\x64\Release\dll;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Program Files (x86)\Pulse Secure\VC142.CRT\X64\;C:\Program Files (x86)\Pulse Secure\VC142.CRT\X86\;C:\Program Files (x86)\Common Files\Pulse Secure\TNC Client Plugin\;C:\Program Files (x86)\IVI Foundation\VISA\WinNT\Bin\;C:\Program Files\IVI Foundation\VISA\Win64\Bin\;C:\Program Files (x86)\IVI Foundation\VISA\WinNT\Bin;C:\Users\Yeh\AppData\Local\Microsoft\WindowsApps;C:\_research\enviroment\opencv\build\x64\vc14\bin;C:\_research\enviroment\opencv\build\x64\vc14\lib;C:\Users\Yeh\Documents\sdl\SDL2-devel-2.0.22-VC\SDL2-2.0.22\lib\x86;C:\Users\Yeh\Documents\sdl\SDL2-devel-2.0.22-VC\SDL2-2.0.22\lib\x64;C:\Users\Yeh\AppData\Roaming\npm;;C:\Users\Yeh\AppData\Local\Programs\Microsoft VS Code\bin
+PATH = C:\Program Files (x86)\VMware\VMware Player\bin\;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\libnvvp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\libnvvp;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Users\Yeh\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;C:\Program Files\NVIDIA Corporation\Nsight Compute 2019.5.0\;C:\_research\enviroment\opencv\build\x64\vc14\bin;C:\_research\enviroment\opencv\build\x64\vc14\lib;C:\_research\openpose-1.5.1\.build\bin;C:\_research\darknet-master\darknet-darknet_yolo_v3\darknet-darknet_yolo_v3\build\openposeDemo\x64\Release\dll;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Program Files (x86)\Pulse Secure\VC142.CRT\X64\;C:\Program Files (x86)\Pulse Secure\VC142.CRT\X86\;C:\Program Files (x86)\Common Files\Pulse Secure\TNC Client Plugin\;C:\Program Files (x86)\IVI Foundation\VISA\WinNT\Bin\;C:\Program Files\IVI Foundation\VISA\Win64\Bin\;C:\Program Files (x86)\IVI Foundation\VISA\WinNT\Bin;C:\MinGW\bin;C:\Users\Yeh\AppData\Local\Microsoft\WindowsApps;C:\_research\enviroment\opencv\build\x64\vc14\bin;C:\_research\enviroment\opencv\build\x64\vc14\lib;C:\Users\Yeh\Documents\sdl\SDL2-devel-2.0.22-VC\SDL2-2.0.22\lib\x86;C:\Users\Yeh\Documents\sdl\SDL2-devel-2.0.22-VC\SDL2-2.0.22\lib\x64;C:\Users\Yeh\AppData\Roaming\npm;;C:\Users\Yeh\AppData\Local\Programs\Microsoft VS Code\bin
 # environment
 COMMONPROGRAMW6432 = C:\Program Files\Common Files
 # environment
@@ -57,7 +55,7 @@ ELECTRON_RUN_AS_NODE = 1
 # environment
 NVTOOLSEXT_PATH = C:\Program Files\NVIDIA Corporation\NvToolsExt\
 # environment
-CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_31412_TCQZETAVVQFUSMBC
+CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_39440_XPNPVEINFNRVHGBE
 # environment
 CUDA_PATH_V10_2 = C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2
 # environment
@@ -81,7 +79,7 @@ PUBLIC = C:\Users\Public
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
-VSCODE_CODE_CACHE_PATH = C:\Users\Yeh\AppData\Roaming\Code\CachedData\5437499feb04f7a586f677b155b039bc2b3669eb
+VSCODE_CODE_CACHE_PATH = C:\Users\Yeh\AppData\Roaming\Code\CachedData\f1e16e1e6214d7c44d078b1f0607b2388f29d729
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
@@ -96,8 +94,8 @@ ONEDRIVECONSUMER = C:\Users\Yeh\OneDrive
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # environment
 USERDOMAIN = MSI
-# default
-MAKE = $(MAKE_COMMAND)
+# environment
+MAKE = C:\MinGW\bin\mingw32-make.exe
 # default
 MAKECMDGOALS := all
 # environment
@@ -113,13 +111,11 @@ PROCESSOR_ARCHITEW6432 = AMD64
 # default
 .VARIABLES := 
 # environment
-EFC_6864 = 1
-# environment
 PROCESSOR_IDENTIFIER = Intel64 Family 6 Model 165 Stepping 2, GenuineIntel
 # environment
 OS = Windows_NT
 # environment
-VSCODE_IPC_HOOK = \\.\pipe\ffc99e49-1.90.2-main-sock
+VSCODE_IPC_HOOK = \\.\pipe\ffc99e49-1.91.1-main-sock
 # environment
 HOMEPATH = \Users\Yeh
 # environment
@@ -129,7 +125,7 @@ PROMPT = $P$G
 # environment
 SYSTEMROOT = C:\WINDOWS
 # environment
-VSCODE_L10N_BUNDLE_LOCATION = file:///c%3A/Users/Yeh/.vscode/extensions/ms-ceintl.vscode-language-pack-zh-hant-1.90.2024061209/translations/extensions/vscode.json-language-features.i18n.json
+VSCODE_L10N_BUNDLE_LOCATION = file:///c%3A/Users/Yeh/.vscode/extensions/ms-ceintl.vscode-language-pack-zh-hant-1.91.2024071009/translations/extensions/vscode.json-language-features.i18n.json
 # environment
 APPDATA = C:\Users\Yeh\AppData\Roaming
 # environment
@@ -161,11 +157,11 @@ LANG = C
 # environment
 PROCESSOR_LEVEL = 6
 # environment
-VSCODE_PID = 31412
+VSCODE_PID = 39440
 # environment
 USERDOMAIN_ROAMINGPROFILE = MSI
 # variable set hash-table stats:
-# Load=76/1024=7%, Rehash=0, Collisions=4/78=5%
+# Load=75/1024=7%, Rehash=0, Collisions=4/78=5%
 
 # Pattern-specific Variable Values
 
@@ -197,14 +193,13 @@ all:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 3 / storage = 76 B / av 
-g = 25 B
+# strcache buffers: 1 (0) / strings = 3 / storage = 76 B / avg = 25 B
 # current buf: size = 8174 B / used = 76 B / count = 3 / avg = 25 B
 
 # strcache performance: lookups = 4 / hit rate = 25%
 # hash-table stats:
 # Load=3/8192=0%, Rehash=0, Collisions=0/4=0%
-# Finished Make data base on Mon Jul 22 11:30:50 2024
+# Finished Make data base on Wed Jul 24 17:18:54 2024
 
  
 mingw32-make: *** /usr/bin/make: No such file or directory.  Stop.

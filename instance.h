@@ -1,13 +1,14 @@
 #ifndef _instance_H
 #define _instance_H
 #include <iostream>
-using namespace std;
+
 #include <map>
 #include "pin.h"
 #include "ff.h"
 #include "gate.h"
-using namespace std;
 
+using namespace std;
+class clique;
 class instance{
     private:
         double leftdownx ,leftdowny;
@@ -25,11 +26,22 @@ class instance{
         instance(){
 
         }
+        instance(string s)
+        {
+            libname=s;
+        }
+        
+
+        
         string Getlibname(){
             return libname;
         }
         bool Gettype() {
             return type;
+        }
+        void Setlibname(string s) {
+            libname = s; 
+            
         }
         void Setname(string s, bool t) {
             libname = s; 
@@ -119,10 +131,7 @@ class instance{
         double GetY() {
             return leftdowny;
         }
-        double Getdelay()
-        {
-            return fftype.Getdelay();
-        }
+       
         double Getslack()
         {
             return slack;
