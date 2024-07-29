@@ -93,7 +93,7 @@ struct placement {
 
     }
     */
-string find_nearst_pinpair(map<string,pinpair>& topin,Pins& d,Pins&q)
+string find_nearst_pinpair(ofstream& log,map<string,pinpair>& topin,Pins& d,Pins&q)
     {
         double mindistance=DBL_MAX;
         string nearstpair=" ";
@@ -102,6 +102,8 @@ string find_nearst_pinpair(map<string,pinpair>& topin,Pins& d,Pins&q)
         {
         
                 double nowdistance=distance(it->second.todpin,d)+distance(it->second.toqpin,q);
+                log<<it->first<<nowdistance<<endl;
+                log<<"tod"<<it->second.todpin.getx()<<"toq"<<it->second.toqpin.getx()<<endl;
                 if(nowdistance<mindistance&&nowdistance!=0)
                 {
                     mindistance=nowdistance;
@@ -429,6 +431,7 @@ int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair,map<stri
 {
 
     bool success = 0;
+    
     //cout << "xx" << endl;
     double x = nowclique.centerx * nowclique.clique_member.size();
     double y = nowclique.centery * nowclique.clique_member.size();
@@ -447,11 +450,14 @@ int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair,map<stri
     Pins center;
     center.SetX(x);
     center.SetY(y);
-    // cout<<nowclique.ffname<<"FFNAME"<<endl;
+     cout<<nowclique.ffname<<"FFNAME"<<endl;
+      cout<<FF_lib[nowclique.ffname].getpoewer()<<"FFpow"<<endl;
+      cout<<nowclique.flipflop.getarea()<<"FFar"<<endl;
     // cout<<nowclique.clique_member.size()+totest_Pinpair.size();
      //cout<<FF_lib2.size()<<"ss";
-     //cout<<nowclique.flipflop.getarea()<<endl;
-    double prevcost = nowclique.flipflop.Getcostperbit(b, c) * (nowclique.clique_member.size() + totest_Pinpair.size());
+     
+     cout<<nowclique.flipflop.Getcostperbit(b, c)<<endl;
+    double prevcost =( nowclique.flipflop.getarea()*b+ c*FF_lib[nowclique.ffname].getpoewer())*(nowclique.clique_member.size() + totest_Pinpair.size());
     //cout<<"prevcost="<<nowclique.flipflop.Getcost(b,c)<<endl;
     for (auto fit = FF_lib2.begin(); fit != FF_lib2.end(); fit++)
     {
@@ -580,12 +586,14 @@ int main(int argc, char** argv) {
     map<string, double>TimingSlack;
 
     ifstream infile;
-    ofstream outfile;
+    ofstream outfile,logfile;
 
     string s;
     double num;
     infile.open(argv[1]);
     outfile.open(argv[2]);
+    logfile.open("log.txt");
+
 
      //infile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\testcase1_0614.txt");
     // outfile.open("C:\\Users\\Yeh\\Desktop\\class\\eda\\Fp\\ICCAD-ProblemB\\output0614.txt");
@@ -602,6 +610,15 @@ int main(int argc, char** argv) {
     else
     {
         cout << "notopen";
+        return 0;
+    }
+    if (logfile.is_open())
+    {
+
+    }
+    else
+    {
+        cout << "lognotopen";
         return 0;
     }
     infile >> s; //Alpha
@@ -996,7 +1013,7 @@ int main(int argc, char** argv) {
         infile >> s;
         infile >> num;
         FF_lib[s].SetPower(num);
-         FF_lib2[ FF_lib[s].getbit()][s].SetPower(num);
+        FF_lib2[ FF_lib[s].getbit()][s].SetPower(num);
         infile >> s;
     }
     vector<string>new_inst;
@@ -1014,6 +1031,7 @@ int main(int argc, char** argv) {
             string nowinstname = FF_same_CLK.at(i).at(j);
             instance nowinst = inst_lib[nowinstname];
             //cout<<nowinstname<<endl;
+            logfile<<"now"<<nowinstname<<endl;
             FF nowff = FF_lib[nowinst.Getlibname()];
             oldpower+=nowff.getpoewer();
             if (nowff.getbit() > 1)
@@ -1028,6 +1046,7 @@ int main(int argc, char** argv) {
                     //cout<<temptoQ.getx()<<"toq,"<<temptoQ.gety()<<endl;
                     //cout<<temptoD.getx()<<"tod,"<<temptoD.gety()<<endl;
                     topin.insert(pair<string, pinpair>(nowinstname + "/" + to_string(k), temppinpair));
+                    logfile<<"to"<<nowinstname + "/" + to_string(k)<<endl;
                 }
             }
             else
@@ -1080,11 +1099,11 @@ int main(int argc, char** argv) {
             do
             {
                 string nearst = find_nearst_pinpair_outof_clique(topin, tempclique, to_test);
-
+                logfile<<"near"<<nearst<<endl;
                 if (topin.find(nearst) != topin.end())
                 {
                     pinpair nearst_pinpair = pinpair(topin[nearst]);
-                    string nearst_neearst = find_nearst_pinpair(topin, nearst_pinpair.todpin, nearst_pinpair.toqpin);
+                    string nearst_neearst = find_nearst_pinpair(logfile,topin, nearst_pinpair.todpin, nearst_pinpair.toqpin);
                     auto inclique = tempclique.clique_member.find(nearst_neearst);
                     //cout << nearst << nearst_neearst << endl;
                     pincount = tempclique.clique_member.size() + to_test.size();
@@ -1146,7 +1165,6 @@ int main(int argc, char** argv) {
 
             } while (success != -1 && pincount <= maxff);
             to_test.clear();
-
             newff.push_back(tempclique);
             map<string, int> temp = set_corespond_pin(tempclique, tempclique.flipflop);
             cores_pin.push_back(temp);
@@ -1425,5 +1443,6 @@ int main(int argc, char** argv) {
     cout<<"est="<< totalestslack;
     infile.close();
     outfile.close();
+    logfile.close();
     return 0;
 }
