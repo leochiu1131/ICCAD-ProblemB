@@ -6,7 +6,7 @@ C:\MinGW\bin\mingw32-make.exe all -f C:\Users\Yeh\Desktop\class\eda\Fp\ICCAD-Pro
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Jul 24 17:18:54 2024
+# Make data base, printed on Fri Aug 16 21:56:10 2024
 
 # Variables
 
@@ -19,7 +19,7 @@ HOMEDRIVE = C:
 # environment
 WINDIR = C:\WINDOWS
 # environment
-VSCODE_NLS_CONFIG = {"locale":"zh-tw","osLocale":"zh-tw","availableLanguages":{"*":"zh-tw"},"_languagePackId":"05db1f40aabd63c588707801b11a4a0a.zh-tw","_translationsConfigFile":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\05db1f40aabd63c588707801b11a4a0a.zh-tw\\tcf.json","_cacheRoot":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\05db1f40aabd63c588707801b11a4a0a.zh-tw","_resolvedLanguagePackCoreLocation":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\05db1f40aabd63c588707801b11a4a0a.zh-tw\\f1e16e1e6214d7c44d078b1f0607b2388f29d729","_corruptedFile":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\05db1f40aabd63c588707801b11a4a0a.zh-tw\\corrupted.info","_languagePackSupport":true}
+VSCODE_NLS_CONFIG = {"userLocale":"zh-tw","osLocale":"zh-tw","resolvedLanguage":"zh-tw","defaultMessagesFile":"C:\\Users\\Yeh\\AppData\\Local\\Programs\\Microsoft VS Code\\resources\\app\\out\\nls.messages.json","languagePack":{"translationsConfigFile":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\5c8ff055e0af251fead7222b5b221e4f.zh-tw\\tcf.json","messagesFile":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\5c8ff055e0af251fead7222b5b221e4f.zh-tw\\eaa41d57266683296de7d118f574d0c2652e1fc4\\nls.messages.json","corruptMarkerFile":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\5c8ff055e0af251fead7222b5b221e4f.zh-tw\\corrupted.info"},"locale":"zh-tw","availableLanguages":{"*":"zh-tw"},"_languagePackId":"5c8ff055e0af251fead7222b5b221e4f.zh-tw","_languagePackSupport":true,"_translationsConfigFile":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\5c8ff055e0af251fead7222b5b221e4f.zh-tw\\tcf.json","_cacheRoot":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\5c8ff055e0af251fead7222b5b221e4f.zh-tw","_resolvedLanguagePackCoreLocation":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\5c8ff055e0af251fead7222b5b221e4f.zh-tw\\eaa41d57266683296de7d118f574d0c2652e1fc4","_corruptedFile":"C:\\Users\\Yeh\\AppData\\Roaming\\Code\\clp\\5c8ff055e0af251fead7222b5b221e4f.zh-tw\\corrupted.info"}
 # environment
 ONEDRIVE = C:\Users\Yeh\OneDrive
 # environment
@@ -55,7 +55,7 @@ ELECTRON_RUN_AS_NODE = 1
 # environment
 NVTOOLSEXT_PATH = C:\Program Files\NVIDIA Corporation\NvToolsExt\
 # environment
-CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_39440_XPNPVEINFNRVHGBE
+CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_10036_AZZKRPGLCPBMEFOH
 # environment
 CUDA_PATH_V10_2 = C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2
 # environment
@@ -79,7 +79,7 @@ PUBLIC = C:\Users\Public
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
-VSCODE_CODE_CACHE_PATH = C:\Users\Yeh\AppData\Roaming\Code\CachedData\f1e16e1e6214d7c44d078b1f0607b2388f29d729
+VSCODE_CODE_CACHE_PATH = C:\Users\Yeh\AppData\Roaming\Code\CachedData\eaa41d57266683296de7d118f574d0c2652e1fc4
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
@@ -115,7 +115,7 @@ PROCESSOR_IDENTIFIER = Intel64 Family 6 Model 165 Stepping 2, GenuineIntel
 # environment
 OS = Windows_NT
 # environment
-VSCODE_IPC_HOOK = \\.\pipe\ffc99e49-1.91.1-main-sock
+VSCODE_IPC_HOOK = \\.\pipe\ffc99e49-1.92.1-main-sock
 # environment
 HOMEPATH = \Users\Yeh
 # environment
@@ -125,9 +125,11 @@ PROMPT = $P$G
 # environment
 SYSTEMROOT = C:\WINDOWS
 # environment
-VSCODE_L10N_BUNDLE_LOCATION = file:///c%3A/Users/Yeh/.vscode/extensions/ms-ceintl.vscode-language-pack-zh-hant-1.91.2024071009/translations/extensions/vscode.json-language-features.i18n.json
+VSCODE_L10N_BUNDLE_LOCATION = file:///c%3A/Users/Yeh/.vscode/extensions/ms-ceintl.vscode-language-pack-zh-hant-1.92.2024073109/translations/extensions/vscode.json-language-features.i18n.json
 # environment
 APPDATA = C:\Users\Yeh\AppData\Roaming
+# environment
+__COMPAT_LAYER = DetectorsAppHealth
 # environment
 VXIPNPPATH = C:\Program Files (x86)\IVI Foundation\VISA\
 # environment
@@ -157,11 +159,11 @@ LANG = C
 # environment
 PROCESSOR_LEVEL = 6
 # environment
-VSCODE_PID = 39440
+VSCODE_PID = 10036
 # environment
 USERDOMAIN_ROAMINGPROFILE = MSI
 # variable set hash-table stats:
-# Load=75/1024=7%, Rehash=0, Collisions=4/78=5%
+# Load=76/1024=7%, Rehash=0, Collisions=4/79=5%
 
 # Pattern-specific Variable Values
 
@@ -199,7 +201,7 @@ all:
 # strcache performance: lookups = 4 / hit rate = 25%
 # hash-table stats:
 # Load=3/8192=0%, Rehash=0, Collisions=0/4=0%
-# Finished Make data base on Wed Jul 24 17:18:54 2024
+# Finished Make data base on Fri Aug 16 21:56:10 2024
 
  
 mingw32-make: *** /usr/bin/make: No such file or directory.  Stop.

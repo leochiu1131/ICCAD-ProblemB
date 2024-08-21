@@ -22,7 +22,7 @@ class instance{
         
     public:
         map<string,Pins> todpin;
-        map<string,Pins> toqpin;
+        map<string,vector<Pins>> toqpin;
         instance(){
 
         }
@@ -113,7 +113,7 @@ class instance{
         void SetGate(Gate g) {
             gatetype = g;
         }
-        Pins GetPins(string s) {
+        Pins& GetPins(string s) {
             if (!type) {
                 return fftype.GetPins(s);
             }

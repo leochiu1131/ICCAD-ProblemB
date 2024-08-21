@@ -95,7 +95,7 @@ class FF{
         map<string, Pins>& GetPinlist() {
             return PinList;
         }
-        Pins GetPins(string s) {
+        Pins& GetPins(string s) {
             return PinList[s];
         }
         double Getcost(double beta ,double gamma){

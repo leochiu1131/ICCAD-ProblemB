@@ -61,12 +61,12 @@ class Nets{
             }
             else if (pin_name[0] == 'I')
             {
-                SetINnet(s, p);
+                SetOUTnet(s, p);
                 added = 1;
             }
             else if (pin_name[0] == 'O')
             {
-                SetOUTnet(s, p);
+                SetINnet(s, p);
                 added = 1;
             }
             else if (pin_name[0] == 'C' || pin_name[0] == 'c')
@@ -90,30 +90,16 @@ class Nets{
                     continue;
                 }
                 //cout<<"outsize"<<OUTnetlist.size();
-                 for(auto qit=INnetlist.begin();qit!=INnetlist.end();qit++)
+                for(auto qit=INnetlist.begin();qit!=INnetlist.end();qit++)
                 {   
                     
                     frompin.insert(pair<string,string>(s,qit->first));
                     continue;
                     
                 }
-                for(auto qit=OUTnetlist.begin();qit!=OUTnetlist.end();qit++)
-                {   
-                    
-                    frompin.insert(pair<string,string>(s,qit->first));
-                    continue;
-                }
+               
             }
-            for(auto dit=Dnetlist.begin();dit!=Dnetlist.end();dit++)
-            {
-                string s=dit->first;
-                for(auto qit=Qnetlist.begin();qit!=Qnetlist.end();qit++)
-                {   
-                    
-                    frompin.insert(pair<string,string>(s,qit->first));
-                    continue;
-                }
-            }
+            
         }
         void settopin(unordered_map<string, instance>&inst_lib)
         {
@@ -143,7 +129,7 @@ class Nets{
                 }
                 for(auto qit=OUTnetlist.begin();qit!=OUTnetlist.end();qit++)
                 {   
-                    
+                 
                     inst.todpin.insert(pair<string,Pins>(pin_name,qit->second));
                 }
                 
@@ -162,24 +148,42 @@ class Nets{
                 }    
                 instance& inst=inst_lib.find(inst_name)->second;
                 //cout<<"dsize"<<Dnetlist.size();
+                bool haveq=0;
                 for(auto qit=Dnetlist.begin();qit!=Dnetlist.end();qit++)
                 {   
+                    if(!haveq)
+                    {
+                        vector<Pins> tmp;
+                        tmp.emplace_back(qit->second);
+                        inst.toqpin.insert(pair<string,vector<Pins>>(pin_name,tmp));
+                        haveq=1;
+                    }
+                    else
+                    {
+                        inst.toqpin[pin_name].emplace_back(qit->second);
+                    }
                     
-                    inst.toqpin.insert(pair<string,Pins>(pin_name,qit->second));
                     
                 }
               
-                 for(auto qit=OUTnetlist.begin();qit!=OUTnetlist.end();qit++)
+                for(auto qit=OUTnetlist.begin();qit!=OUTnetlist.end();qit++)
                 {   
+                   if(!haveq)
+                    {
+                        vector<Pins> tmp;
+                        tmp.emplace_back(qit->second);
+                        inst.toqpin.insert(pair<string,vector<Pins>>(pin_name,tmp));
+                        haveq=1;
+                    }
+                    else
+                    {
+                        inst.toqpin[pin_name].emplace_back(qit->second);
+                    } 
                     
-                    inst.toqpin.insert(pair<string,Pins>(pin_name,qit->second));
                     //cout<<"outt";
                 }
-                 for(auto qit=INnetlist.begin();qit!=INnetlist.end();qit++)
-                {   
-                    
-                    inst.toqpin.insert(pair<string,Pins>(pin_name,qit->second));
-                }
+                
+                //cout<<inst.toqpin.size()<<endl;
 
             }
 
@@ -192,7 +196,4 @@ class Nets{
             return CLKnetlist.size();
         }
 };
-
-
-
 #endif

@@ -35,7 +35,7 @@ class Gate{
         map<string, Pins>& GetPinlist() {
             return PinList;
         }
-        Pins GetPins(string s) {
+        Pins& GetPins(string s) {
             return PinList[s];
         }
         double getheight()

@@ -12,7 +12,7 @@ double absd(double x)
         return x;
     }
 }
-double distance(Pins a ,Pins& b)
+double distance(Pins& a ,Pins& b)
 {
     double ans=absd(a.getx()-b.getx())+absd(a.gety()-b.gety());
     return ans;

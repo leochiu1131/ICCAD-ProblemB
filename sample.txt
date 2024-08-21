@@ -1,6 +1,6 @@
 Alpha 10
 Beta 10
-Gamma 1000000000
+Gamma 0.0000002
 Lambda 10
 DieSize 0 0 23475 23280
 NumInput 2
@@ -58,4 +58,4 @@ TimingSlack reg2 D 0.149378
 TimingSlack reg3 D -0.152106
 TimingSlack reg4 D 0.150923
 GatePower SVT_FF_1 1.4781e+01
-GatePower SVT_FF_2 1
+GatePower SVT_FF_2 5.2515e+01
