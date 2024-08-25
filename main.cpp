@@ -33,7 +33,12 @@ struct placement {
 };
 
 
-
+string find_nearst_pinpair_outof_clique(map<string,pinpair>&,clique&,map<string,pinpair>& );
+string find_nearst_pinpair(map<string,pinpair>& ,Pins& ,Pins&,string& );
+string find_nearst_pinpair(map<string,pinpair>& ,Pins& ,string& );
+map<string,int> set_corespond_pin(clique& ,map<string,pinpair>& ,FF& );
+map<string,int> set_corespond_pin(clique& ,FF& );
+int clique_test(clique& , map<string, pinpair>& ,map<string, FF>& ,map<string, FF>& , double& , double& , double& , double&) ;
 
  string find_nearst_pinpair_outof_clique(map<string,pinpair>& topin,clique&nowclique,map<string,pinpair>& to_test)
     {
@@ -542,7 +547,7 @@ double compute_area(double**& placement_check, int x, int y) {
     }
     return area;
 }
-int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair,map<string, FF>& FF_lib, map<string, FF>& FF_lib2, double a, double b, double c, double displacemaentdelay)
+int clique_test(clique& nowclique, map<string, pinpair>& totest_Pinpair,map<string, FF>& FF_lib, map<string, FF>& FF_lib2, double & a, double & b, double & c, double & displacemaentdelay)
 {
 
     bool success = 0;
@@ -920,7 +925,7 @@ int main(int argc, char** argv) {
     int instanceCount;
 
     infile >> instanceCount; //instanceCount
-    cout<<instanceCount<<endl;
+    //cout<<instanceCount<<endl;
     for (int i = 0; i < instanceCount; i++) {
         instance tempinst;
         infile >> s; //Inst
@@ -1654,8 +1659,11 @@ int main(int argc, char** argv) {
         }
     }
 
-
-
+  
+    for (int i = 0; i < placementRow[0].NumofSite; i++) {
+    delete[] placement_check[i]; // delete each row
+}
+delete[] placement_check;
     //cout<<"oldpower="<<oldpower<<"oldarea="<<oldarea<<"oldslack="<<oldslack<<"newpower="<<newpower<<"newarea="<<newarea<<"newslack="<<newslack<<endl;
     //cout<<"est="<< totalestslack;
     infile.close();
